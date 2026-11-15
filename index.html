@@ -1,0 +1,2744 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>21 CUTZ — Architectural Barbering, Strictly by Appointment</title>
+  <meta name="description" content="21 cutz is a one-chair, appointment-only barber studio. Precision skin fades, scissor architecture and beard sculpting by a single master barber." />
+  <meta name="theme-color" content="#050505" />
+  <meta name="color-scheme" content="dark" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23050505'/%3E%3Cpath d='M7 11h8v5H7v5h8M20 13l3-2v10M22.5 31.25L31.25 22.5' fill='none' stroke='%23F5F5F5' stroke-width='1.6'/%3E%3C/svg%3E" />
+
+  <!-- Motion gate: hides hero elements only when JS + motion are available.
+       A 4s failsafe reveals everything if the animation libraries never arrive. -->
+  <script>
+    (function () {
+      var d = document.documentElement;
+      d.classList.remove('no-js');
+      d.classList.add('js');
+      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (!reduce) {
+        d.classList.add('motion-ok');
+        window.__motionFailsafe = setTimeout(function () {
+          d.classList.remove('motion-ok');
+          d.classList.add('motion-failsafe');
+        }, 4000);
+      }
+    })();
+  </script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS (CDN) + inline config -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    if (window.tailwind) {
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              obsidian: '#050505',
+              charcoal: '#0D0D0D',
+              gallery: '#F5F5F5',
+              muted: '#8A8A8A',
+              hair: 'rgba(255, 255, 255, 0.14)',
+              'hair-dark': 'rgba(5, 5, 5, 0.14)'
+            },
+            fontFamily: {
+              display: ['Syne', '"Archivo Black"', 'system-ui', 'sans-serif'],
+              sans: ['Inter', 'system-ui', '-apple-system', '"Segoe UI"', 'sans-serif'],
+              mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace']
+            },
+            borderRadius: { none: '0px', sm: '1px', DEFAULT: '2px' },
+            borderColor: { DEFAULT: 'rgba(255, 255, 255, 0.14)' },
+            letterSpacing: { label: '0.12em', tightest: '-0.04em' },
+            transitionTimingFunction: {
+              spatial: 'cubic-bezier(0.16, 1, 0.3, 1)',
+              ui: 'cubic-bezier(0.22, 1, 0.36, 1)'
+            }
+          }
+        }
+      };
+    }
+  </script>
+
+  <style>
+    /* =========================================================
+       0. TOKENS
+       ========================================================= */
+    :root {
+      --obsidian: #050505;
+      --charcoal: #0D0D0D;
+      --gallery: #F5F5F5;
+      --white: #FFFFFF;
+      --hair: rgba(255, 255, 255, 0.14);
+      --hair-dark: rgba(5, 5, 5, 0.14);
+      --muted: #8A8A8A;
+      --muted-light: rgba(5, 5, 5, 0.62);
+      --body-dim: #BDBDBD;
+      --ease-spatial: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-ui: cubic-bezier(0.22, 1, 0.36, 1);
+      --nav-h: 64px;
+      --gutter: clamp(1rem, 2.8vw, 2.5rem);
+      --maxw: 1680px;
+      --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+      --display: Syne, "Archivo Black", Impact, system-ui, sans-serif;
+      --sans: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+    }
+
+    /* =========================================================
+       1. BASE
+       ========================================================= */
+    html {
+      background: var(--obsidian);
+      color: var(--gallery);
+      scrollbar-gutter: stable;
+      -webkit-text-size-adjust: 100%;
+    }
+    body {
+      margin: 0;
+      background: var(--obsidian);
+      color: var(--gallery);
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+    *, *::before, *::after { box-shadow: none !important; }
+    [hidden] { display: none !important; }
+    ::selection { background: var(--white); color: var(--obsidian); }
+    img { -webkit-user-drag: none; user-select: none; }
+    a, button { -webkit-tap-highlight-color: transparent; }
+    button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+    :focus-visible { outline: 1px solid var(--white); outline-offset: 3px; }
+    .on-light :focus-visible { outline-color: var(--obsidian); }
+    section[id], #book { scroll-margin-top: calc(var(--nav-h) + 16px); }
+    .is-locked, .is-locked body { overflow: hidden; }
+    .sr-only {
+      position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+    }
+    .wrap { width: 100%; max-width: var(--maxw); margin-inline: auto; padding-inline: var(--gutter); }
+    .section { position: relative; padding-block: clamp(5rem, 10vw, 9rem); }
+
+    /* Lenis (recommended base styles) */
+    html.lenis, html.lenis body { height: auto; }
+    .lenis.lenis-smooth { scroll-behavior: auto !important; }
+    .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+    .lenis.lenis-stopped { overflow: hidden; }
+    .lenis.lenis-scrolling iframe { pointer-events: none; }
+
+    /* Darkroom grain overlay (tile generated in JS) */
+    .grain {
+      position: fixed; inset: 0; z-index: 300; pointer-events: none;
+      opacity: .05; background-size: 180px 180px;
+    }
+
+    .skip-link {
+      position: fixed; left: 12px; top: 12px; z-index: 400;
+      background: var(--white); color: var(--obsidian); padding: 10px 14px;
+      transform: translateY(-160%);
+      transition: transform 220ms var(--ease-ui);
+    }
+    .skip-link:focus { transform: translateY(0); }
+
+    /* =========================================================
+       2. TYPOGRAPHY
+       ========================================================= */
+    .t-display {
+      font-family: var(--display);
+      font-weight: 800;
+      text-transform: uppercase;
+      line-height: .92;
+      letter-spacing: -.04em;
+      font-kerning: normal;
+    }
+    .t-hero { font-size: clamp(2.5rem, 13vw, 5.25rem); }
+    @media (min-width: 1024px) { .t-hero { font-size: clamp(4rem, 6.4vw, 7.75rem); } }
+    .t-xl { font-size: clamp(2.6rem, 7vw, 6.5rem); }
+    .t-lg { font-size: clamp(2.1rem, 4.6vw, 4.25rem); }
+    .t-md { font-size: clamp(1.25rem, 1.9vw, 1.75rem); line-height: 1; letter-spacing: -.03em; }
+    .t-label {
+      font-family: var(--mono);
+      font-size: 11px;
+      line-height: 1.45;
+      font-weight: 500;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .t-meta {
+      font-family: var(--mono);
+      font-size: 10.5px;
+      line-height: 1.5;
+      font-weight: 400;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .t-body { font-size: clamp(15px, 1.05vw, 17px); line-height: 1.65; }
+    .c-dim { color: var(--body-dim); }
+    .c-muted { color: var(--muted); }
+
+    /* Masked line reveals */
+    .line-mask { display: block; overflow: hidden; padding-bottom: .08em; margin-bottom: -.08em; }
+    .line-inner { display: inline-block; will-change: transform; }
+
+    .icon { width: 1em; height: 1em; display: inline-block; flex: none; }
+    svg.lucide { stroke-width: 1.5px; }
+
+    /* Hero pre-intro states (only when motion is available) */
+    .motion-ok .hero .line-inner { transform: translate3d(0, 105%, 0); }
+    .motion-ok [data-hero-fade],
+    .motion-ok [data-hud],
+    .motion-ok [data-intro="nav"] { opacity: 0; }
+    .motion-ok [data-hero-frame] { clip-path: inset(14% 18% 14% 18%); }
+
+    /* =========================================================
+       3. BUTTONS
+       ========================================================= */
+    .btn {
+      position: relative;
+      display: inline-flex; align-items: center; justify-content: center; gap: .75rem;
+      height: 52px; padding: 0 1.4rem;
+      font-family: var(--mono); font-size: 11.5px; font-weight: 500;
+      letter-spacing: .12em; text-transform: uppercase; white-space: nowrap;
+      border: 1px solid transparent; border-radius: 0;
+      cursor: pointer; user-select: none;
+      transition:
+        background-color 200ms var(--ease-ui),
+        color 200ms var(--ease-ui),
+        border-color 200ms var(--ease-ui),
+        transform 160ms var(--ease-ui);
+    }
+    .btn:active { transform: scale(.98); }
+    .btn .btn-arrow { display: inline-flex; transition: transform 240ms var(--ease-ui); }
+    .btn:hover .btn-arrow { transform: translateX(4px); }
+    .btn.btn-primary { background: var(--white); color: var(--obsidian); border-color: var(--white); }
+    .btn.btn-primary:hover { background: var(--obsidian); color: var(--white); }
+    .btn.btn-ghost { background: transparent; color: var(--gallery); border-color: var(--hair); }
+    .btn.btn-ghost:hover { background: var(--white); color: var(--obsidian); border-color: var(--white); }
+    .btn.btn-dark { background: var(--obsidian); color: var(--white); border-color: var(--obsidian); }
+    .btn.btn-dark:hover { background: transparent; color: var(--obsidian); }
+    .btn-sm { height: 38px; padding: 0 1rem; font-size: 10.5px; }
+    .btn[disabled] { opacity: .32; pointer-events: none; }
+
+    /* =========================================================
+       4. NAVIGATION
+       ========================================================= */
+    .site-nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 70;
+      background: rgba(5, 5, 5, .86);
+      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--hair);
+    }
+    .nav-inner {
+      position: relative; height: var(--nav-h);
+      display: flex; align-items: center; justify-content: space-between;
+      padding-inline: var(--gutter);
+    }
+    .brand { display: inline-flex; align-items: center; gap: .7rem; color: var(--white); }
+    .brand-mark { width: 28px; height: 28px; }
+    .brand-word { font-family: var(--display); font-weight: 800; font-size: 17px; letter-spacing: -.04em; line-height: 1; }
+    .nav-links {
+      display: none;
+      position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+      gap: clamp(1.25rem, 2.4vw, 2.5rem);
+    }
+    @media (min-width: 1024px) { .nav-links { display: flex; } }
+    .nav-link { position: relative; padding: 6px 0; color: var(--gallery); }
+    .nav-link .idx { color: var(--muted); transition: color 200ms var(--ease-ui); }
+    .nav-link::after {
+      content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px;
+      background: currentColor; transform: scaleX(0); transform-origin: right center;
+      transition: transform 260ms var(--ease-ui);
+    }
+    .nav-link:hover::after, .nav-link.is-active::after { transform: scaleX(1); transform-origin: left center; }
+    .nav-link:hover .idx, .nav-link.is-active .idx { color: var(--white); }
+    .nav-actions { display: flex; align-items: center; gap: .6rem; }
+    .status-badge {
+      display: none; align-items: center; gap: .55rem;
+      height: 38px; padding: 0 .9rem; border: 1px solid var(--hair); color: var(--gallery);
+    }
+    @media (min-width: 640px) and (max-width: 1023px) { .status-badge { display: inline-flex; } }
+    @media (min-width: 1280px) { .status-badge { display: inline-flex; } }
+    .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--white); animation: pulse 2.4s var(--ease-ui) infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .22; } }
+    .nav-progress {
+      position: absolute; left: 0; bottom: -1px; height: 1px; width: 100%;
+      background: var(--white); transform-origin: 0 50%; transform: scaleX(0);
+    }
+
+    .burger {
+      position: relative; width: 40px; height: 38px;
+      display: inline-flex; align-items: center; justify-content: center;
+      border: 1px solid var(--hair);
+      transition: background-color 200ms var(--ease-ui), border-color 200ms var(--ease-ui), transform 160ms var(--ease-ui);
+    }
+    .burger:hover { border-color: var(--white); }
+    .burger:active { transform: scale(.96); }
+    .burger span {
+      position: absolute; left: 11px; right: 11px; height: 1px; background: var(--white);
+      transition: transform 380ms var(--ease-spatial);
+    }
+    .burger span:nth-child(1) { transform: translateY(-4px); }
+    .burger span:nth-child(2) { transform: translateY(4px); }
+    .burger.is-open span:nth-child(1) { transform: rotate(45deg); }
+    .burger.is-open span:nth-child(2) { transform: rotate(-45deg); }
+    @media (min-width: 1024px) { .burger { display: none; } }
+
+    /* Mobile drawer */
+    .drawer {
+      position: fixed; top: var(--nav-h); left: 0; right: 0; bottom: 0; z-index: 65;
+      background: var(--gallery); color: var(--obsidian);
+      clip-path: inset(0 0 100% 0); visibility: hidden;
+      transition: clip-path 640ms var(--ease-spatial), visibility 0s linear 640ms;
+      overflow-y: auto;
+    }
+    .drawer.is-open {
+      clip-path: inset(0 0 0% 0); visibility: visible;
+      transition: clip-path 720ms var(--ease-spatial), visibility 0s;
+    }
+    .drawer-inner { min-height: 100%; display: flex; flex-direction: column; padding: 0 var(--gutter) var(--gutter); }
+    .drawer-head {
+      display: flex; justify-content: space-between; height: 52px; align-items: center;
+      border-bottom: 1px solid var(--hair-dark); color: var(--muted-light);
+    }
+    .drawer-nav { display: flex; flex-direction: column; }
+    .drawer-link {
+      display: grid; grid-template-columns: 2.75rem 1fr auto; align-items: center;
+      padding: 1.1rem 0; border-bottom: 1px solid var(--hair-dark);
+    }
+    .drawer-idx { color: var(--muted-light); }
+    .drawer-mask { display: block; overflow: hidden; }
+    .drawer-text {
+      display: inline-block; font-family: var(--display); font-weight: 800;
+      font-size: clamp(2.6rem, 13vw, 5rem); line-height: .9; letter-spacing: -.04em;
+      transform: translate3d(0, 110%, 0);
+      transition: transform 760ms var(--ease-spatial);
+      transition-delay: calc(var(--i, 0) * 60ms + 140ms);
+    }
+    .drawer.is-open .drawer-text { transform: translate3d(0, 0, 0); }
+    .drawer:not(.is-open) .drawer-text { transition-duration: 260ms; transition-delay: 0ms; }
+    .drawer-arrow { font-size: 22px; transition: transform 240ms var(--ease-ui); }
+    .drawer-link:active .drawer-arrow { transform: translate(3px, -3px); }
+    .drawer-foot {
+      margin-top: auto; padding-top: 2rem;
+      display: flex; flex-wrap: wrap; gap: 1.25rem; align-items: flex-end; justify-content: space-between;
+      color: var(--muted-light);
+    }
+
+    /* =========================================================
+       5. HERO
+       ========================================================= */
+    .hero {
+      position: relative; display: flex;
+      padding-top: calc(var(--nav-h) + clamp(1.5rem, 3vw, 2.5rem));
+      padding-bottom: clamp(1.5rem, 3vw, 2.5rem);
+    }
+    @media (min-width: 1024px) { .hero { min-height: 100svh; } }
+    .hero > .wrap { display: flex; flex-direction: column; }
+    .hero-grid { flex: 1; }
+    .hero-left { display: flex; flex-direction: column; justify-content: space-between; gap: 2.5rem; }
+    .hero-kicker { display: flex; align-items: center; gap: .8rem; color: var(--muted); }
+    .kicker-mark { width: 8px; height: 8px; background: var(--white); }
+    .hero-title { margin: 0; }
+    @media (min-width: 1024px) { .hero-indent { padding-left: .55em; } }
+    .hero-rule { height: 1px; background: var(--hair); margin: clamp(1.75rem, 3vw, 2.5rem) 0; }
+    .hero-specs { margin: 0; border-top: 1px solid var(--hair); }
+    .hero-specs div {
+      display: flex; justify-content: space-between; gap: 1rem;
+      padding: .62rem 0; border-bottom: 1px solid var(--hair);
+    }
+    .hero-specs dt { color: var(--muted); }
+    .hero-specs dd { margin: 0; color: var(--gallery); text-align: right; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: clamp(1.75rem, 3vw, 2.5rem); }
+    @media (max-width: 639px) { .hero-actions .btn { flex: 1 1 100%; } }
+    .hero-foot {
+      display: flex; justify-content: space-between; align-items: center;
+      padding-top: 1rem; border-top: 1px solid var(--hair); color: var(--muted);
+    }
+    .hero-foot .scroll-cue { display: inline-flex; align-items: center; gap: .5rem; }
+
+    .frame { position: relative; overflow: hidden; border: 1px solid var(--hair); background: var(--charcoal); }
+    .art-img {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover; object-position: 50% 50%;
+      filter: grayscale(1);
+      transition: opacity 700ms var(--ease-spatial);
+    }
+    .art-img:not([src]) { opacity: 0; }
+    .hero-frame { aspect-ratio: 4 / 5; }
+    @media (min-width: 1024px) { .hero-frame { aspect-ratio: auto; height: 100%; min-height: 560px; } }
+    .hero-guides { position: absolute; inset: 0; width: 100%; height: 100%; mix-blend-mode: difference; pointer-events: none; }
+    .hero-guides * { vector-effect: non-scaling-stroke; }
+    .hero-notes { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; display: none; }
+    @media (min-width: 640px) { .hero-notes { display: block; } }
+    .hero-notes rect { fill: var(--obsidian); stroke: rgba(255, 255, 255, .3); stroke-width: 1; vector-effect: non-scaling-stroke; }
+    .hero-notes text { font-family: var(--mono); font-size: 16px; letter-spacing: 2px; fill: #fff; }
+    .hero-ruler {
+      position: absolute; left: 0; top: 0; bottom: 0; width: 10px; pointer-events: none; mix-blend-mode: difference;
+      background:
+        repeating-linear-gradient(to bottom, #fff 0 1px, transparent 1px 60px) left top / 10px 100% no-repeat,
+        repeating-linear-gradient(to bottom, rgba(255,255,255,.7) 0 1px, transparent 1px 12px) left top / 5px 100% no-repeat;
+    }
+    .hud-chip {
+      position: absolute; z-index: 3; display: inline-flex; align-items: center; gap: .45rem;
+      padding: 5px 8px; background: var(--obsidian); color: var(--white);
+      border: 1px solid var(--hair); white-space: nowrap;
+    }
+    .hud-tl { top: 12px; left: 22px; display: none; }
+    .hud-tr { top: 12px; right: 12px; }
+    .hud-bl { bottom: 12px; left: 22px; }
+    .hud-br { bottom: 12px; right: 12px; }
+    @media (min-width: 640px) { .hud-tl { display: inline-flex; } }
+    .rec-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--white); animation: pulse 1.6s var(--ease-ui) infinite; }
+
+    /* =========================================================
+       6. KINETIC TICKER
+       ========================================================= */
+    .ticker { border-top: 1px solid var(--hair); border-bottom: 1px solid var(--hair); overflow: hidden; background: var(--obsidian); }
+    .ticker-track { display: flex; width: max-content; will-change: transform; }
+    .ticker-css { animation: ticker 46s linear infinite; }
+    @keyframes ticker { to { transform: translate3d(-50%, 0, 0); } }
+    .ticker-group { display: flex; align-items: center; flex: none; }
+    .ticker-word {
+      display: inline-flex; align-items: center; height: clamp(56px, 6vw, 84px);
+      padding: 0 clamp(1rem, 2vw, 2rem);
+      font-family: var(--display); font-weight: 800; text-transform: uppercase;
+      font-size: clamp(1.1rem, 2.2vw, 2rem); letter-spacing: -.02em; white-space: nowrap;
+    }
+    .ticker-sep { font-family: var(--mono); font-size: 12px; color: var(--muted); letter-spacing: .12em; }
+
+    /* =========================================================
+       7. SECTION LABELS
+       ========================================================= */
+    .sec-label { display: flex; align-items: center; gap: .9rem; color: var(--muted); }
+    .sec-label .num { color: var(--white); }
+    .sec-rule { flex: 1; height: 1px; background: var(--hair); transform-origin: 0 50%; }
+    .on-light .sec-label { color: var(--muted-light); }
+    .on-light .sec-label .num { color: var(--obsidian); }
+    .on-light .sec-rule { background: var(--hair-dark); }
+
+    /* =========================================================
+       8. LOOKBOOK
+       ========================================================= */
+    .filter-bar { position: relative; border-top: 1px solid var(--hair); border-bottom: 1px solid var(--hair); overflow-x: auto; scrollbar-width: none; }
+    .filter-bar::-webkit-scrollbar { display: none; }
+    .filter-track { position: relative; display: flex; width: max-content; min-width: 100%; }
+    .filter-indicator {
+      position: absolute; left: 0; top: 0; bottom: 0; width: 100px;
+      background: var(--white); transform-origin: 0 50%; transform: scaleX(0);
+      transition: transform 560ms var(--ease-spatial);
+      pointer-events: none;
+    }
+    .filter-indicator.no-trans { transition: none; }
+    .filter-btn {
+      position: relative; z-index: 1;
+      display: inline-flex; align-items: center; gap: .55rem;
+      height: 52px; padding: 0 1.4rem; border-right: 1px solid var(--hair);
+      color: var(--gallery); white-space: nowrap;
+      transition: color 220ms var(--ease-ui), transform 160ms var(--ease-ui);
+    }
+    .filter-btn .count { color: var(--muted); transition: color 220ms var(--ease-ui); }
+    .filter-btn:hover .count { color: var(--white); }
+    .filter-btn[aria-pressed="true"] { color: var(--obsidian); }
+    .filter-btn[aria-pressed="true"] .count { color: rgba(5, 5, 5, .55); }
+    .filter-bar:not(.has-indicator) .filter-btn[aria-pressed="true"] { background: var(--white); }
+    .filter-btn:focus-visible { outline-offset: -5px; }
+    .filter-btn:focus-visible[aria-pressed="true"] { outline-color: var(--obsidian); }
+    .filter-note { margin-left: auto; display: none; align-items: center; padding: 0 1.25rem; color: var(--muted); white-space: nowrap; }
+    @media (min-width: 768px) { .filter-note { display: inline-flex; } }
+
+    .lookbook-grid {
+      position: relative; display: grid; grid-template-columns: minmax(0, 1fr);
+      border-left: 1px solid var(--hair);
+    }
+    @media (min-width: 640px) { .lookbook-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (min-width: 1024px) {
+      .lookbook-grid { grid-template-columns: repeat(12, minmax(0, 1fr)); grid-auto-rows: clamp(300px, 31vw, 540px); }
+      .g-item.s-7x2 { grid-column: span 7; grid-row: span 2; }
+      .g-item.s-5x2 { grid-column: span 5; grid-row: span 2; }
+      .g-item.s-7x1 { grid-column: span 7; grid-row: span 1; }
+      .g-item.s-5x1 { grid-column: span 5; grid-row: span 1; }
+    }
+    .g-item {
+      position: relative; display: flex; flex-direction: column;
+      padding: clamp(10px, 1.1vw, 16px);
+      border-right: 1px solid var(--hair); border-bottom: 1px solid var(--hair);
+      background: var(--obsidian); cursor: pointer; outline: none;
+    }
+    .g-item:focus-visible { outline: 1px solid var(--white); outline-offset: -6px; }
+    .g-frame { position: relative; overflow: hidden; aspect-ratio: 4 / 5; background: var(--charcoal); }
+    .g-light .g-frame { background: var(--gallery); }
+    @media (min-width: 1024px) { .g-frame { aspect-ratio: auto; flex: 1 1 auto; min-height: 0; } }
+    .g-media { position: absolute; inset: 0; }
+    .g-img {
+      object-position: var(--pos, 50% 40%);
+      transition: opacity 700ms var(--ease-spatial), transform 600ms var(--ease-spatial);
+    }
+    .g-item:hover .g-img, .g-item:focus-visible .g-img { transform: scale(1.04); }
+    .g-chip {
+      position: absolute; z-index: 2; padding: 4px 7px;
+      background: var(--obsidian); color: var(--white); border: 1px solid var(--hair);
+    }
+    .g-chip-tl { top: 10px; left: 10px; }
+    .g-chip-tr { top: 10px; right: 10px; }
+    .g-chip-br { bottom: 10px; right: 10px; }
+    .g-cross {
+      position: absolute; left: 50%; top: 50%; width: 34px; height: 34px; margin: -17px 0 0 -17px;
+      z-index: 2; pointer-events: none; mix-blend-mode: difference;
+      opacity: 0; transform: scale(.55) rotate(-45deg);
+      transition: opacity 220ms var(--ease-ui), transform 520ms var(--ease-spatial);
+    }
+    .g-cross::before, .g-cross::after { content: ""; position: absolute; background: #fff; }
+    .g-cross::before { left: 50%; top: 0; bottom: 0; width: 1px; }
+    .g-cross::after { top: 50%; left: 0; right: 0; height: 1px; }
+    .g-item:hover .g-cross, .g-item:focus-visible .g-cross { opacity: 1; transform: scale(1) rotate(0deg); }
+    .g-inspect {
+      position: absolute; right: 10px; bottom: 10px; z-index: 2;
+      display: inline-flex; align-items: center; gap: .4rem; padding: 6px 9px;
+      background: var(--white); color: var(--obsidian);
+      clip-path: inset(0 0 100% 0);
+      transition: clip-path 320ms var(--ease-ui);
+    }
+    .g-item:hover .g-inspect, .g-item:focus-visible .g-inspect { clip-path: inset(0 0 0 0); }
+    .g-meta { display: flex; flex-direction: column; gap: .25rem; padding-top: 12px; }
+    .g-title { color: var(--white); }
+    .is-hidden { display: none !important; }
+
+    /* Lightbox */
+    .lightbox {
+      position: fixed; inset: 0; z-index: 100;
+      visibility: hidden; opacity: 0;
+      transition: opacity 280ms var(--ease-ui), visibility 0s linear 280ms;
+    }
+    .lightbox.is-open { visibility: visible; opacity: 1; transition: opacity 280ms var(--ease-ui), visibility 0s; }
+    .lb-backdrop { position: absolute; inset: 0; background: var(--obsidian); }
+    .lb-shell { position: relative; height: 100%; display: flex; flex-direction: column; }
+    .lb-top {
+      flex: none; height: var(--nav-h); display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+      padding-inline: var(--gutter); border-bottom: 1px solid var(--hair);
+    }
+    .lb-close {
+      display: inline-flex; align-items: center; gap: .6rem; height: 38px; padding: 0 .9rem;
+      border: 1px solid var(--hair);
+      transition: background-color 200ms var(--ease-ui), color 200ms var(--ease-ui), transform 160ms var(--ease-ui);
+    }
+    .lb-close:hover { background: var(--white); color: var(--obsidian); }
+    .lb-close:active { transform: scale(.98); }
+    .lb-body { flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; }
+    @media (min-width: 1024px) {
+      .lb-body { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); overflow: hidden; }
+    }
+    .lb-stage { padding: var(--gutter); display: flex; align-items: center; justify-content: center; }
+    @media (min-width: 1024px) { .lb-stage { grid-column: span 7; border-right: 1px solid var(--hair); min-height: 0; } }
+    .lb-frame {
+      width: 100%; max-width: 560px; aspect-ratio: 4 / 5; margin: 0;
+      clip-path: inset(7% 7% 7% 7%);
+      transition: clip-path 820ms var(--ease-spatial);
+    }
+    .lb-frame.is-light { background: var(--gallery); }
+    @media (min-width: 1024px) { .lb-frame { height: 100%; width: auto; max-width: 100%; } }
+    .lightbox.is-open .lb-frame { clip-path: inset(0 0 0 0); }
+    .lb-media { position: absolute; inset: 0; }
+    .lb-panel { padding: var(--gutter); }
+    @media (min-width: 1024px) { .lb-panel { grid-column: span 5; overflow-y: auto; display: flex; flex-direction: column; justify-content: center; } }
+    .lb-panel-inner { display: flex; flex-direction: column; gap: 1.5rem; max-width: 560px; }
+    .lb-title { font-size: clamp(1.75rem, 2.8vw, 3rem); margin: 0; }
+    .lb-specs { margin: 0; border-top: 1px solid var(--hair); }
+    .lb-spec { display: grid; grid-template-columns: 8.5rem 1fr; gap: 1rem; padding: .7rem 0; border-bottom: 1px solid var(--hair); }
+    .lb-spec dd { margin: 0; font-size: 12px; color: var(--gallery); }
+    .lb-nav { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
+    .lb-reveal {
+      opacity: 0; transform: translate3d(0, 14px, 0);
+      transition: opacity 520ms var(--ease-spatial), transform 760ms var(--ease-spatial);
+      transition-delay: calc(var(--d, 0) * 50ms + 140ms);
+    }
+    .lightbox.is-open .lb-reveal { opacity: 1; transform: none; }
+    .lightbox:not(.is-open) .lb-reveal { transition-delay: 0ms; }
+
+    /* =========================================================
+       9. ABOUT (inverted)
+       ========================================================= */
+    .about { background: var(--gallery); color: var(--obsidian); }
+    .portrait-frame { position: relative; overflow: hidden; aspect-ratio: 4 / 5; border: 1px solid var(--hair-dark); background: var(--gallery); margin: 0; }
+    .portrait-img { inset: auto; top: -8%; left: 0; height: 116%; }
+    .portrait-frame .g-chip { background: var(--gallery); color: var(--obsidian); border-color: var(--hair-dark); }
+    .portrait-cap {
+      display: flex; justify-content: space-between; align-items: flex-end; gap: 1rem;
+      padding-top: 1rem; margin-top: 1rem; border-top: 1px solid var(--hair-dark); color: var(--muted-light);
+    }
+    .signature { width: 150px; height: auto; color: var(--obsidian); flex: none; }
+    .about-copy p { margin: 0; color: rgba(5, 5, 5, .78); }
+    .metrics { border-top: 1px solid var(--hair-dark); border-left: 1px solid var(--hair-dark); }
+    .metric { padding: clamp(1rem, 1.6vw, 1.5rem); border-right: 1px solid var(--hair-dark); border-bottom: 1px solid var(--hair-dark); display: flex; flex-direction: column; gap: 2rem; justify-content: space-between; min-height: 168px; }
+    .metric-num { font-size: clamp(2.75rem, 3.8vw, 4rem); }
+    .metric-label { color: var(--muted-light); }
+
+    /* =========================================================
+       10. BOOKING
+       ========================================================= */
+    .step-head {
+      display: flex; align-items: center; gap: .6rem; height: 56px;
+      border-bottom: 1px solid var(--hair); color: var(--muted);
+    }
+    .step-head .num { color: var(--white); outline: none; }
+    .svc-row {
+      position: relative; isolation: isolate;
+      display: grid; grid-template-columns: auto 1fr auto; gap: .35rem 1.1rem; align-items: start;
+      width: 100%; text-align: left; padding: 22px 18px;
+      border-bottom: 1px solid var(--hair); color: var(--gallery);
+      transition: color 240ms var(--ease-ui), transform 160ms var(--ease-ui);
+    }
+    .svc-row::after {
+      content: ""; position: absolute; inset: 0; z-index: -2;
+      background: var(--charcoal); opacity: 0; transition: opacity 200ms var(--ease-ui);
+    }
+    .svc-row::before {
+      content: ""; position: absolute; inset: 0; z-index: -1;
+      background: var(--white); clip-path: inset(0 100% 0 0);
+      transition: clip-path 480ms var(--ease-spatial);
+    }
+    .svc-row:hover::after { opacity: 1; }
+    .svc-row.is-active { color: var(--obsidian); }
+    .svc-row.is-active::before { clip-path: inset(0 0 0 0); }
+    .svc-row:focus-visible { outline-offset: -5px; }
+    .svc-row.is-active:focus-visible { outline-color: var(--obsidian); }
+    .svc-code { color: var(--muted); padding-top: .3rem; transition: color 240ms var(--ease-ui); }
+    .svc-row.is-active .svc-code { color: var(--obsidian); }
+    .svc-name { display: block; font-family: var(--display); font-weight: 800; font-size: clamp(1.15rem, 1.6vw, 1.5rem); letter-spacing: -.03em; line-height: 1.05; text-transform: uppercase; }
+    .svc-desc { display: block; margin-top: .45rem; font-size: 14px; line-height: 1.5; color: var(--muted); transition: color 240ms var(--ease-ui); max-width: 42ch; }
+    .svc-row.is-active .svc-desc { color: rgba(5, 5, 5, .7); }
+    .svc-side { display: flex; flex-direction: column; align-items: flex-end; gap: .35rem; }
+    .svc-price { font-family: var(--display); font-weight: 800; font-size: clamp(1.15rem, 1.6vw, 1.5rem); letter-spacing: -.03em; line-height: 1.05; }
+    .svc-check { width: 14px; height: 14px; border: 1px solid currentColor; display: inline-flex; align-items: center; justify-content: center; margin-top: .25rem; }
+    .svc-check::after { content: ""; width: 6px; height: 6px; background: currentColor; transform: scale(0); transition: transform 260ms var(--ease-spatial); }
+    .svc-row.is-active .svc-check::after { transform: scale(1); }
+
+    .status-bar {
+      position: relative; overflow: hidden;
+      display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1rem;
+      min-height: 54px; padding: 12px 16px;
+      border: 1px solid var(--hair); background: var(--charcoal);
+    }
+    .status-bar::after {
+      content: ""; position: absolute; inset: 0; background: var(--white); opacity: 0; pointer-events: none;
+    }
+    .status-bar.is-flash::after { animation: flash 900ms var(--ease-ui); }
+    @keyframes flash { 0% { opacity: .85; } 100% { opacity: 0; } }
+    .status-live { display: inline-flex; align-items: center; gap: .55rem; color: var(--muted); }
+    .swap { display: inline-block; overflow: hidden; vertical-align: bottom; }
+    .swap > span { display: inline-block; }
+    .status-path { color: var(--muted); word-break: break-all; }
+    .status-ref { display: flex; align-items: center; gap: .6rem; padding: 10px 16px; border: 1px solid var(--hair); border-top: 0; color: var(--gallery); }
+    .status-ref button { margin-left: auto; color: var(--muted); transition: color 200ms var(--ease-ui); }
+    .status-ref button:hover { color: var(--white); }
+
+    .cal-frame { position: relative; border: 1px solid var(--hair); background: var(--charcoal); min-height: 660px; }
+    .calendly-inline-widget { min-width: 320px; height: 700px; }
+    .cal-notice {
+      display: flex; align-items: center; gap: .7rem; padding: 12px 16px;
+      background: var(--white); color: var(--obsidian);
+    }
+    .cal-notice-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--obsidian); flex: none; animation: pulse 2s var(--ease-ui) infinite; }
+    .cal-notice-tag { margin-left: auto; padding: 2px 6px; border: 1px solid var(--obsidian); flex: none; }
+    .cal-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 1rem; padding: 20px 16px; border-bottom: 1px solid var(--hair); }
+    .cal-bar { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--hair); }
+    .cal-pager { display: flex; }
+    .cal-page {
+      width: 38px; height: 34px; display: inline-flex; align-items: center; justify-content: center;
+      border: 1px solid var(--hair); margin-left: -1px;
+      transition: background-color 200ms var(--ease-ui), color 200ms var(--ease-ui), transform 160ms var(--ease-ui);
+    }
+    .cal-page:hover { background: var(--white); color: var(--obsidian); }
+    .cal-page:active { transform: scale(.96); }
+    .cal-page[disabled] { opacity: .3; pointer-events: none; }
+    .cal-days { display: grid; grid-template-columns: repeat(7, minmax(64px, 1fr)); overflow-x: auto; border-bottom: 1px solid var(--hair); scrollbar-width: none; }
+    .cal-days::-webkit-scrollbar { display: none; }
+    .cal-day {
+      display: flex; flex-direction: column; align-items: center; gap: .25rem; padding: 14px 4px;
+      border-right: 1px solid var(--hair); color: var(--gallery);
+      transition: background-color 200ms var(--ease-ui), color 200ms var(--ease-ui), transform 160ms var(--ease-ui);
+    }
+    .cal-day:last-child { border-right: 0; }
+    .cal-day:hover { background: rgba(255, 255, 255, .06); }
+    .cal-day:active { transform: scale(.97); }
+    .cal-day[aria-pressed="true"] { background: var(--white); color: var(--obsidian); }
+    .cal-day[aria-pressed="true"] .cal-day-open { color: rgba(5, 5, 5, .6); }
+    .cal-day[disabled] { color: #444; pointer-events: none; }
+    .cal-day:focus-visible { outline-offset: -4px; }
+    .cal-day-num { font-family: var(--display); font-weight: 800; font-size: 1.5rem; line-height: 1; letter-spacing: -.03em; }
+    .cal-day-open { color: var(--muted); font-size: 9.5px; }
+    .cal-slots-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .4rem 1rem; padding: 14px 16px 0; }
+    .cal-slots { display: grid; grid-template-columns: repeat(auto-fill, minmax(88px, 1fr)); gap: 8px; padding: 14px 16px 18px; }
+    .cal-slot {
+      height: 44px; border: 1px solid var(--hair); font-family: var(--mono); font-size: 12.5px; letter-spacing: .06em;
+      color: var(--gallery);
+      transition: background-color 180ms var(--ease-ui), color 180ms var(--ease-ui), border-color 180ms var(--ease-ui), transform 150ms var(--ease-ui);
+    }
+    .cal-slot:hover { border-color: var(--white); }
+    .cal-slot:active { transform: scale(.97); }
+    .cal-slot[aria-pressed="true"] { background: var(--white); color: var(--obsidian); border-color: var(--white); }
+    .cal-slot[disabled] { color: #4a4a4a; text-decoration: line-through; border-color: rgba(255, 255, 255, .06); pointer-events: none; }
+    .cal-foot {
+      display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem;
+      padding: 16px; border-top: 1px solid var(--hair);
+    }
+    .cal-done { padding: clamp(1.5rem, 3vw, 2.5rem); display: flex; flex-direction: column; gap: 1.5rem; }
+    .cal-done-title { outline: none; }
+    .cal-done-list { margin: 0; border-top: 1px solid var(--hair); }
+    .cal-done-list div { display: grid; grid-template-columns: 7.5rem 1fr; gap: 1rem; padding: .75rem 0; border-bottom: 1px solid var(--hair); }
+    .cal-done-list dt { color: var(--muted); }
+    .cal-done-list dd { margin: 0; }
+
+    /* =========================================================
+       11. FOOTER
+       ========================================================= */
+    .site-footer { border-top: 1px solid var(--hair); padding-top: clamp(3rem, 6vw, 5rem); }
+    .footer-word-wrap { overflow: hidden; padding-bottom: .04em; }
+    .footer-word {
+      display: inline-block; white-space: nowrap; margin: 0;
+      font-size: 21vw; line-height: .82;
+    }
+    .fchar { display: inline-block; will-change: transform; }
+    .footer-grid { border-top: 1px solid var(--hair); border-left: 1px solid var(--hair); margin-top: clamp(1.5rem, 3vw, 2.5rem); }
+    .footer-cell { padding: clamp(1.25rem, 2vw, 1.75rem); border-right: 1px solid var(--hair); border-bottom: 1px solid var(--hair); display: flex; flex-direction: column; gap: 1rem; min-height: 190px; }
+    .footer-cell a { transition: color 200ms var(--ease-ui); }
+    .footer-cell a:hover { color: var(--muted); }
+    .hours { margin: 0; }
+    .hours div { display: flex; justify-content: space-between; gap: 1rem; padding: .3rem 0; border-bottom: 1px solid var(--hair); }
+    .hours dt { color: var(--muted); }
+    .hours dd { margin: 0; }
+    .top-btn {
+      margin-top: auto; display: flex; align-items: center; justify-content: space-between;
+      width: 100%; height: 64px; padding: 0 1.1rem; border: 1px solid var(--hair);
+      transition: background-color 200ms var(--ease-ui), color 200ms var(--ease-ui), transform 160ms var(--ease-ui);
+    }
+    .top-btn:hover { background: var(--white); color: var(--obsidian); }
+    .top-btn:active { transform: scale(.98); }
+    .top-btn .icon { transition: transform 260ms var(--ease-ui); }
+    .top-btn:hover .icon { transform: translateY(-3px); }
+    .footer-base { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .75rem; padding: 1.25rem 0 1.75rem; color: var(--muted); }
+
+    /* =========================================================
+       12. REDUCED MOTION
+       ========================================================= */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .001ms !important;
+        transition-delay: 0ms !important;
+        scroll-behavior: auto !important;
+      }
+      .ticker-css { animation: none !important; }
+    }
+  </style>
+</head>
+
+<body>
+  <a href="#book" class="skip-link t-label">Skip to booking</a>
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- =====================================================
+       00. NAVIGATION
+       ===================================================== -->
+  <header id="site-nav" class="site-nav" data-intro="nav">
+    <div class="nav-inner">
+      <a href="#top" class="brand" aria-label="21 cutz, back to top">
+        <svg class="brand-mark" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+          <rect x="0.75" y="0.75" width="30.5" height="30.5" />
+          <path d="M7 11h8v5H7v5h8" />
+          <path d="M20 13l3-2v10" />
+          <path d="M22.5 31.25L31.25 22.5" />
+        </svg>
+        <span class="brand-word">21 CUTZ</span>
+      </a>
+
+      <nav class="nav-links" aria-label="Primary">
+        <a href="#work" class="nav-link t-label" data-nav="work"><span class="idx">01.</span> WORK</a>
+        <a href="#about" class="nav-link t-label" data-nav="about"><span class="idx">02.</span> ABOUT</a>
+        <a href="#services" class="nav-link t-label" data-nav="services"><span class="idx">03.</span> SERVICES</a>
+        <a href="#book" class="nav-link t-label" data-nav="book"><span class="idx">04.</span> BOOK</a>
+      </nav>
+
+      <div class="nav-actions">
+        <span class="status-badge t-label"><span class="status-dot" aria-hidden="true"></span>BY APPOINTMENT</span>
+        <a href="#book" class="btn btn-primary btn-sm">BOOK CHAIR</a>
+        <button id="burger" class="burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="drawer">
+          <span></span><span></span>
+        </button>
+      </div>
+    </div>
+    <span class="nav-progress" data-progress aria-hidden="true"></span>
+  </header>
+
+  <!-- Mobile drawer -->
+  <div id="drawer" class="drawer on-light" aria-hidden="true" data-lenis-prevent>
+    <div class="drawer-inner">
+      <div class="drawer-head t-label"><span>INDEX</span><span>21 CUTZ // CHAIR 01</span></div>
+      <nav class="drawer-nav" aria-label="Mobile">
+        <a href="#work" class="drawer-link" style="--i:0">
+          <span class="drawer-idx t-label">01</span>
+          <span class="drawer-mask"><span class="drawer-text">WORK</span></span>
+          <i data-lucide="arrow-up-right" class="icon drawer-arrow"></i>
+        </a>
+        <a href="#about" class="drawer-link" style="--i:1">
+          <span class="drawer-idx t-label">02</span>
+          <span class="drawer-mask"><span class="drawer-text">ABOUT</span></span>
+          <i data-lucide="arrow-up-right" class="icon drawer-arrow"></i>
+        </a>
+        <a href="#services" class="drawer-link" style="--i:2">
+          <span class="drawer-idx t-label">03</span>
+          <span class="drawer-mask"><span class="drawer-text">SERVICES</span></span>
+          <i data-lucide="arrow-up-right" class="icon drawer-arrow"></i>
+        </a>
+        <a href="#book" class="drawer-link" style="--i:3">
+          <span class="drawer-idx t-label">04</span>
+          <span class="drawer-mask"><span class="drawer-text">BOOK</span></span>
+          <i data-lucide="arrow-up-right" class="icon drawer-arrow"></i>
+        </a>
+      </nav>
+      <div class="drawer-foot">
+        <p class="t-meta">21 Mercer St, Suite 2B<br />Tue–Fri 10:00 – 20:00 / Sat 09:00 – 17:00</p>
+        <a href="#book" class="btn btn-dark">BOOK CHAIR <span class="btn-arrow"><i data-lucide="arrow-right" class="icon"></i></span></a>
+      </div>
+    </div>
+  </div>
+
+  <main id="main">
+    <!-- =====================================================
+         01. HERO
+         ===================================================== -->
+    <section id="top" class="hero" aria-labelledby="hero-title">
+      <div class="wrap">
+        <div class="hero-grid grid grid-cols-12 gap-x-6 gap-y-10">
+
+          <div class="hero-left col-span-12 lg:col-span-7">
+            <div class="hero-kicker t-label" data-hero-fade>
+              <span class="kicker-mark" aria-hidden="true"></span>
+              <span>EST. STUDIO // PRECISION GROOMING</span>
+            </div>
+
+            <div>
+              <h1 id="hero-title" class="hero-title t-display t-hero" aria-label="Sharp lines. Zero noise." data-fit-lines>
+                <span class="line-mask" aria-hidden="true"><span class="line-inner">SHARP LINES.</span></span>
+                <span class="line-mask" aria-hidden="true"><span class="line-inner hero-indent">ZERO NOISE.</span></span>
+              </h1>
+
+              <div class="hero-rule" data-hero-fade></div>
+
+              <div class="grid grid-cols-12 gap-x-6 gap-y-8">
+                <p class="col-span-12 md:col-span-7 t-body c-dim max-w-[40ch] m-0" data-hero-fade>
+                  An unhurried, appointment-only studio. Every cut is planned around your bone structure, crown
+                  direction and the way your hair actually grows, so it looks right on day one and still grows out
+                  clean on day twenty-one.
+                </p>
+                <dl class="hero-specs col-span-12 md:col-span-5 t-meta" data-hero-fade>
+                  <div><dt>Chair</dt><dd>01 / Solo studio</dd></div>
+                  <div><dt>Sessions</dt><dd>30 – 60 min</dd></div>
+                  <div><dt>Booking</dt><dd>Online only</dd></div>
+                  <div><dt>Walk-ins</dt><dd>None</dd></div>
+                </dl>
+              </div>
+
+              <div class="hero-actions" data-hero-fade>
+                <a href="#book" class="btn btn-primary">RESERVE YOUR SLOT <span class="btn-arrow"><i data-lucide="arrow-right" class="icon"></i></span></a>
+                <a href="#work" class="btn btn-ghost">EXPLORE LOOKBOOK</a>
+              </div>
+            </div>
+
+            <div class="hero-foot t-meta" data-hero-fade>
+              <span class="scroll-cue"><i data-lucide="arrow-down" class="icon"></i> Scroll to inspect</span>
+              <span>Chair 01 / 01</span>
+            </div>
+          </div>
+
+          <div class="col-span-12 lg:col-span-5">
+            <!-- Replace the generated artwork with a photo by adding src="your-photo.jpg" to the img below. -->
+            <figure class="frame hero-frame m-0" data-hero-frame>
+              <img class="art-img" data-image-slot="hero-portrait" data-art="hero"
+                   alt="Halftone profile study of a high skin fade with a textured crop" />
+              <svg class="hero-guides" viewBox="0 0 900 1200" preserveAspectRatio="xMidYMid slice" aria-hidden="true" data-hud>
+                <g fill="none" stroke="#fff" stroke-width="1">
+                  <circle cx="420" cy="520" r="262" opacity=".55" />
+                  <circle cx="420" cy="520" r="3.5" />
+                  <path d="M420 120V1140" opacity=".26" />
+                  <path d="M60 415H840" stroke-dasharray="6 8" opacity=".85" />
+                  <path d="M60 567H840" stroke-dasharray="2 6" opacity=".6" />
+                  <path d="M245 844L480 626" opacity=".7" />
+                  <path d="M456 626H504M480 602V650" />
+                  <path d="M301 844A56 56 0 0 0 286.1 806" />
+                  <path d="M245 844H330" opacity=".5" />
+                  <path d="M48 64H76M62 50V78M824 64H852M838 50V78M48 1136H76M62 1122V1150M824 1136H852M838 1122V1150" opacity=".8" />
+                </g>
+              </svg>
+              <svg class="hero-notes" viewBox="0 0 900 1200" preserveAspectRatio="xMidYMid slice" aria-hidden="true" data-hud>
+                <g><rect x="546" y="381" width="294" height="28" /><text x="554" y="400" textLength="276" lengthAdjust="spacingAndGlyphs">FADE START // 0.0 → #1.5</text></g>
+                <g><rect x="720" y="533" width="120" height="28" /><text x="728" y="552" textLength="102" lengthAdjust="spacingAndGlyphs">SKIN LINE</text></g>
+                <g><rect x="300" y="806" width="97" height="28" /><text x="308" y="825" textLength="79" lengthAdjust="spacingAndGlyphs">JAW 43°</text></g>
+                <g><rect x="432" y="128" width="74" height="28" /><text x="440" y="147" textLength="56" lengthAdjust="spacingAndGlyphs">CROWN</text></g>
+                <g><rect x="496" y="640" width="74" height="28" /><text x="504" y="659" textLength="56" lengthAdjust="spacingAndGlyphs">PIVOT</text></g>
+              </svg>
+              <span class="hero-ruler" aria-hidden="true" data-hud></span>
+              <span class="hud-chip hud-tl t-meta" data-hud>FIG. 01 — PROFILE STUDY</span>
+              <span class="hud-chip hud-tr t-meta" data-hud>47.4979° N // CHAIR 01</span>
+              <span class="hud-chip hud-bl t-meta" data-hud>19.0402° E</span>
+              <span class="hud-chip hud-br t-meta" data-hud><span class="rec-dot" aria-hidden="true"></span>FRAME 001 / 021</span>
+              <figcaption class="sr-only">Generated halftone artwork marking the fade line and jaw angle.</figcaption>
+            </figure>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Kinetic ticker -->
+    <div class="ticker" aria-hidden="true">
+      <div class="ticker-track" data-ticker>
+        <div class="ticker-group">
+          <span class="ticker-word">PRECISION FADES</span><span class="ticker-sep">//</span>
+          <span class="ticker-word">SCISSOR ARCHITECTURE</span><span class="ticker-sep">//</span>
+          <span class="ticker-word">NO WALK-INS</span><span class="ticker-sep">//</span>
+          <span class="ticker-word">STRICTLY BY APPOINTMENT</span><span class="ticker-sep">//</span>
+          <span class="ticker-word">21 CUTZ</span><span class="ticker-sep">//</span>
+        </div>
+      </div>
+    </div>
+    <p class="sr-only">Precision fades. Scissor architecture. No walk-ins. Strictly by appointment. 21 cutz.</p>
+
+    <!-- =====================================================
+         02. LOOKBOOK (01. WORK)
+         ===================================================== -->
+    <section id="work" class="section" aria-labelledby="work-title">
+      <div class="wrap">
+        <div class="sec-label t-label" data-reveal="fade">
+          <span class="num">01</span><span>//</span><span>THE ARCHIVE</span>
+          <span class="sec-rule" data-rule></span>
+          <span class="hidden sm:inline">LOOKBOOK / VOL. 21</span>
+        </div>
+
+        <div class="grid grid-cols-12 gap-x-6 gap-y-6 mt-10 lg:mt-14 items-end">
+          <h2 id="work-title" class="col-span-12 lg:col-span-8 t-display t-xl m-0" data-reveal="lines" data-fit-lines>
+            <span class="line-mask"><span class="line-inner">CUTS ON</span></span>
+            <span class="line-mask"><span class="line-inner">FILE.</span></span>
+          </h2>
+          <p class="col-span-12 lg:col-span-4 t-body c-dim max-w-[42ch] m-0" data-reveal="fade">
+            Six reference cuts from the chair. Open any frame for the full technical breakdown, then book that exact cut.
+          </p>
+        </div>
+
+        <div class="filter-bar mt-12 lg:mt-16" data-filter-bar role="group" aria-label="Filter the lookbook">
+          <div class="filter-track">
+            <span class="filter-indicator" data-filter-indicator aria-hidden="true"></span>
+            <button type="button" class="filter-btn t-label active:scale-[0.98]" data-filter="all" aria-pressed="true">ALL <span class="count">[06]</span></button>
+            <button type="button" class="filter-btn t-label active:scale-[0.98]" data-filter="skin-fades" aria-pressed="false">SKIN FADES <span class="count">[02]</span></button>
+            <button type="button" class="filter-btn t-label active:scale-[0.98]" data-filter="scissor-work" aria-pressed="false">SCISSOR WORK <span class="count">[02]</span></button>
+            <button type="button" class="filter-btn t-label active:scale-[0.98]" data-filter="beard-sculpt" aria-pressed="false">BEARD SCULPT <span class="count">[02]</span></button>
+            <span class="filter-note t-meta" aria-live="polite" data-filter-status>Showing 06 of 06</span>
+          </div>
+        </div>
+
+        <div class="lookbook-grid" data-grid>
+          <article class="g-item s-7x2" data-id="01" data-cat="skin-fades" tabindex="0" role="button" aria-haspopup="dialog"
+                   aria-label="Inspect archive 01: high skin fade with textured crop">
+            <div class="g-frame">
+              <div class="g-media"><img class="art-img g-img" data-image-slot="lookbook-01" data-art="a01" style="--pos: 50% 40%"
+                   alt="Halftone profile study of a high skin fade with a textured crop" /></div>
+              <span class="g-chip g-chip-tl t-meta">#01</span>
+              <span class="g-chip g-chip-tr t-meta">SKIN FADE</span>
+              <span class="g-cross" aria-hidden="true"></span>
+              <span class="g-inspect t-meta" aria-hidden="true">INSPECT <i data-lucide="plus" class="icon"></i></span>
+            </div>
+            <div class="g-meta">
+              <p class="t-label g-title m-0">ARCHIVE #01 — HIGH SKIN FADE + TEXTURED CROP</p>
+              <p class="t-meta c-muted m-0">45 MIN · 0.0MM FOIL → #1.5 GUARD · MATTE CLAY</p>
+            </div>
+          </article>
+
+          <article class="g-item g-light s-5x1" data-id="02" data-cat="scissor-work" tabindex="0" role="button" aria-haspopup="dialog"
+                   aria-label="Inspect archive 02: all-scissor flow with natural texture">
+            <div class="g-frame">
+              <div class="g-media"><img class="art-img g-img" data-image-slot="lookbook-02" data-art="a02" style="--pos: 50% 36%"
+                   alt="Halftone profile study of a longer all-scissor cut swept back" /></div>
+              <span class="g-chip g-chip-tl t-meta">#02</span>
+              <span class="g-chip g-chip-tr t-meta">SCISSOR WORK</span>
+              <span class="g-cross" aria-hidden="true"></span>
+              <span class="g-inspect t-meta" aria-hidden="true">INSPECT <i data-lucide="plus" class="icon"></i></span>
+            </div>
+            <div class="g-meta">
+              <p class="t-label g-title m-0">ARCHIVE #02 — ALL-SCISSOR FLOW + NATURAL TEXTURE</p>
+              <p class="t-meta c-muted m-0">45 MIN · SCISSOR ONLY · SEA SALT + BLOW-DRY</p>
+            </div>
+          </article>
+
+          <article class="g-item s-5x1" data-id="03" data-cat="beard-sculpt" tabindex="0" role="button" aria-haspopup="dialog"
+                   aria-label="Inspect archive 03: sculpted beard with razor cheek line">
+            <div class="g-frame">
+              <div class="g-media"><img class="art-img g-img" data-image-slot="lookbook-03" data-art="a03" style="--pos: 50% 50%"
+                   alt="Close halftone study of a sculpted beard with a straight razor cheek line" /></div>
+              <span class="g-chip g-chip-tl t-meta">#03</span>
+              <span class="g-chip g-chip-tr t-meta">BEARD SCULPT</span>
+              <span class="g-cross" aria-hidden="true"></span>
+              <span class="g-inspect t-meta" aria-hidden="true">INSPECT <i data-lucide="plus" class="icon"></i></span>
+            </div>
+            <div class="g-meta">
+              <p class="t-label g-title m-0">ARCHIVE #03 — SCULPTED BEARD + RAZOR CHEEK LINE</p>
+              <p class="t-meta c-muted m-0">30 MIN · #2 → #4 GUARD · HOT LATHER RAZOR</p>
+            </div>
+          </article>
+
+          <article class="g-item g-light s-5x2" data-id="04" data-cat="skin-fades" tabindex="0" role="button" aria-haspopup="dialog"
+                   aria-label="Inspect archive 04: low drop fade with hard part">
+            <div class="g-frame">
+              <div class="g-media"><img class="art-img g-img" data-image-slot="lookbook-04" data-art="a04" style="--pos: 50% 42%"
+                   alt="Halftone profile study of a low drop fade with a razor-cut hard part" /></div>
+              <span class="g-chip g-chip-tl t-meta">#04</span>
+              <span class="g-chip g-chip-tr t-meta">SKIN FADE</span>
+              <span class="g-cross" aria-hidden="true"></span>
+              <span class="g-inspect t-meta" aria-hidden="true">INSPECT <i data-lucide="plus" class="icon"></i></span>
+            </div>
+            <div class="g-meta">
+              <p class="t-label g-title m-0">ARCHIVE #04 — LOW DROP FADE + HARD PART</p>
+              <p class="t-meta c-muted m-0">45 MIN · 0.5MM → #2 GUARD · LOW-SHINE POMADE</p>
+            </div>
+          </article>
+
+          <article class="g-item s-7x1" data-id="05" data-cat="scissor-work" tabindex="0" role="button" aria-haspopup="dialog"
+                   aria-label="Inspect archive 05: squared crew cut scissor over comb">
+            <div class="g-frame">
+              <div class="g-media"><img class="art-img g-img" data-image-slot="lookbook-05" data-art="a05" style="--pos: 50% 34%"
+                   alt="Line-screen study of a squared crew cut with tapered sides" /></div>
+              <span class="g-chip g-chip-tl t-meta">#05</span>
+              <span class="g-chip g-chip-tr t-meta">SCISSOR WORK</span>
+              <span class="g-cross" aria-hidden="true"></span>
+              <span class="g-inspect t-meta" aria-hidden="true">INSPECT <i data-lucide="plus" class="icon"></i></span>
+            </div>
+            <div class="g-meta">
+              <p class="t-label g-title m-0">ARCHIVE #05 — SQUARED CREW, SCISSOR OVER COMB</p>
+              <p class="t-meta c-muted m-0">45 MIN · NO CLIPPERS · MATTE PASTE</p>
+            </div>
+          </article>
+
+          <article class="g-item g-light s-7x1" data-id="06" data-cat="beard-sculpt" tabindex="0" role="button" aria-haspopup="dialog"
+                   aria-label="Inspect archive 06: full ritual, taper with beard geometry">
+            <div class="g-frame">
+              <div class="g-media"><img class="art-img g-img" data-image-slot="lookbook-06" data-art="a06" style="--pos: 50% 46%"
+                   alt="Halftone profile study of a skin taper joined to a squared full beard" /></div>
+              <span class="g-chip g-chip-tl t-meta">#06</span>
+              <span class="g-chip g-chip-tr t-meta">BEARD SCULPT</span>
+              <span class="g-cross" aria-hidden="true"></span>
+              <span class="g-inspect t-meta" aria-hidden="true">INSPECT <i data-lucide="plus" class="icon"></i></span>
+            </div>
+            <div class="g-meta">
+              <p class="t-label g-title m-0">ARCHIVE #06 — FULL RITUAL: TAPER + BEARD GEOMETRY</p>
+              <p class="t-meta c-muted m-0">60 MIN · 0.0 → #2 + #3 BEARD · HOT TOWEL</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         03. ABOUT (02. THE CRAFTSMAN)
+         ===================================================== -->
+    <section id="about" class="section about on-light" aria-labelledby="about-title">
+      <div class="wrap">
+        <div class="sec-label t-label" data-reveal="fade">
+          <span class="num">02</span><span>//</span><span>THE CRAFTSMAN</span>
+          <span class="sec-rule" data-rule></span>
+          <span class="hidden sm:inline">ONE CHAIR / ONE BARBER</span>
+        </div>
+
+        <div class="grid grid-cols-12 gap-x-6 gap-y-12 mt-10 lg:mt-14">
+          <figure class="col-span-12 md:col-span-8 lg:col-span-5 m-0">
+            <!-- Replace with the founder's photo by adding src="founder.jpg" to the img below. -->
+            <div class="portrait-frame" data-parallax>
+              <img class="art-img portrait-img" data-image-slot="founder-portrait" data-art="portrait"
+                   alt="Line-screen portrait of the founder and head barber of 21 cutz" />
+              <span class="g-chip g-chip-tl t-meta">FIG. 02</span>
+              <span class="g-chip g-chip-br t-meta">CHAIR 01</span>
+            </div>
+            <figcaption class="portrait-cap">
+              <span class="t-label">FOUNDER &amp; HEAD BARBER // 21 CUTZ</span>
+              <!-- Swap this path for the founder's own signature SVG. -->
+              <svg class="signature" viewBox="0 0 190 60" fill="none" stroke="currentColor" stroke-width="1.6"
+                   stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-signature>
+                <path d="M4 38C14 20 22 8 30 10C38 12 26 40 22 46C34 30 44 22 50 26C54 29 46 40 50 41C56 42 62 24 68 25C72 26 66 40 71 40C78 40 84 18 92 16C98 15 92 34 98 36C106 38 114 22 122 24C128 26 120 38 128 38C140 38 156 26 176 22" />
+                <path d="M60 52C90 46 130 44 182 40" />
+              </svg>
+            </figcaption>
+          </figure>
+
+          <div class="col-span-12 lg:col-span-6 lg:col-start-7 flex flex-col gap-10 lg:gap-12">
+            <h2 id="about-title" class="t-display t-lg m-0" data-reveal="lines" data-fit-lines>
+              <span class="line-mask"><span class="line-inner">ONE CHAIR.</span></span>
+              <span class="line-mask"><span class="line-inner">ONE BARBER.</span></span>
+              <span class="line-mask"><span class="line-inner">COMPLETE FOCUS.</span></span>
+            </h2>
+            <div class="about-copy grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6 t-body" data-reveal="fade">
+              <p>
+                Most shops run on volume: a waiting room, three chairs and a clock that decides how much attention
+                you get. 21 cutz was built the other way round. One chair, one barber, and a calendar that is never
+                double-booked. Nobody drifts in, and nobody is waiting on your seat.
+              </p>
+              <p>
+                The cut starts before the clippers do: reading bone structure, growth patterns, crown direction and
+                how your hair falls when it is dry. Then it is executed with discipline: measured guard transitions,
+                deliberate weight lines, a razor-clean perimeter. The aim is a cut that grows out the same way every time.
+              </p>
+            </div>
+            <div class="metrics grid grid-cols-1 sm:grid-cols-3 lg:mt-auto">
+              <div class="metric">
+                <p class="t-display metric-num m-0" data-reveal="lines" data-fit-lines><span class="line-mask"><span class="line-inner">01</span></span></p>
+                <p class="t-label metric-label m-0">DEDICATED CHAIR (NO RUSH)</p>
+              </div>
+              <div class="metric">
+                <p class="t-display metric-num m-0" data-reveal="lines" data-fit-lines><span class="line-mask"><span class="line-inner">45M</span></span></p>
+                <p class="t-label metric-label m-0">MINIMUM SESSION LENGTH</p>
+              </div>
+              <div class="metric">
+                <p class="t-display metric-num m-0" data-reveal="lines" data-fit-lines><span class="line-mask"><span class="line-inner">100%</span></span></p>
+                <p class="t-label metric-label m-0">APPOINTMENT PRECISION</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         04. SERVICES + BOOKING (03. APPOINTMENT)
+         ===================================================== -->
+    <section id="services" class="section" aria-labelledby="book-title">
+      <div class="wrap">
+        <div class="sec-label t-label" data-reveal="fade">
+          <span class="num">03</span><span>//</span><span>APPOINTMENT</span>
+          <span class="sec-rule" data-rule></span>
+          <span class="hidden sm:inline">TWO STEPS / CALENDLY</span>
+        </div>
+
+        <div class="grid grid-cols-12 gap-x-6 gap-y-6 mt-10 lg:mt-14 items-end">
+          <h2 id="book-title" class="col-span-12 lg:col-span-7 t-display t-xl m-0" data-reveal="lines" data-fit-lines>
+            <span class="line-mask"><span class="line-inner">RESERVE</span></span>
+            <span class="line-mask"><span class="line-inner">THE CHAIR.</span></span>
+          </h2>
+          <p class="col-span-12 lg:col-span-4 lg:col-start-9 t-body c-dim max-w-[42ch] m-0" data-reveal="fade">
+            Pick a service, then a time. Each booking holds the studio for the full session, so it is just you and the chair.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-12 mt-12 lg:mt-16 border-t border-hair">
+          <!-- Step 1: service selector -->
+          <div class="col-span-12 lg:col-span-5 lg:border-r border-hair">
+            <div class="step-head t-label"><span class="num">STEP 01</span><span>— SELECT SERVICE</span><span class="ml-auto">04 OPTIONS</span></div>
+            <div class="svc-list" role="radiogroup" aria-label="Service">
+              <button type="button" class="svc-row is-active active:scale-[0.98]" role="radio" aria-checked="true" tabindex="0"
+                      data-service="signature" data-code="01" data-name="THE SIGNATURE FADE" data-price="45" data-duration="45" data-slug="signature-fade">
+                <span class="svc-code t-label">01 //</span>
+                <span>
+                  <span class="svc-name">THE SIGNATURE FADE</span>
+                  <span class="svc-desc">Skin fade or taper, detailed crown work, straight-razor neck finish.</span>
+                </span>
+                <span class="svc-side">
+                  <span class="svc-price">$45</span>
+                  <span class="t-meta">45 MIN</span>
+                  <span class="svc-check" aria-hidden="true"></span>
+                </span>
+              </button>
+              <button type="button" class="svc-row active:scale-[0.98]" role="radio" aria-checked="false" tabindex="-1"
+                      data-service="scissor" data-code="02" data-name="SCISSOR ARCHITECTURE" data-price="50" data-duration="45" data-slug="scissor-architecture">
+                <span class="svc-code t-label">02 //</span>
+                <span>
+                  <span class="svc-name">SCISSOR ARCHITECTURE</span>
+                  <span class="svc-desc">All-scissor cut, wash, natural texture shaping &amp; blow-dry styling.</span>
+                </span>
+                <span class="svc-side">
+                  <span class="svc-price">$50</span>
+                  <span class="t-meta">45 MIN</span>
+                  <span class="svc-check" aria-hidden="true"></span>
+                </span>
+              </button>
+              <button type="button" class="svc-row active:scale-[0.98]" role="radio" aria-checked="false" tabindex="-1"
+                      data-service="ritual" data-code="03" data-name="THE 21 FULL RITUAL" data-price="65" data-duration="60" data-slug="21-full-ritual">
+                <span class="svc-code t-label">03 //</span>
+                <span>
+                  <span class="svc-name">THE 21 FULL RITUAL</span>
+                  <span class="svc-desc">Signature cut + hot towel beard sculpt, razor line-up &amp; cold stone finish.</span>
+                </span>
+                <span class="svc-side">
+                  <span class="svc-price">$65</span>
+                  <span class="t-meta">60 MIN</span>
+                  <span class="svc-check" aria-hidden="true"></span>
+                </span>
+              </button>
+              <button type="button" class="svc-row active:scale-[0.98]" role="radio" aria-checked="false" tabindex="-1"
+                      data-service="beard" data-code="04" data-name="BEARD &amp; RAZOR SCULPT" data-price="30" data-duration="30" data-slug="beard-razor-sculpt">
+                <span class="svc-code t-label">04 //</span>
+                <span>
+                  <span class="svc-name">BEARD &amp; RAZOR SCULPT</span>
+                  <span class="svc-desc">Precision beard geometry, hot lather straight-razor cheek/neck line.</span>
+                </span>
+                <span class="svc-side">
+                  <span class="svc-price">$30</span>
+                  <span class="t-meta">30 MIN</span>
+                  <span class="svc-check" aria-hidden="true"></span>
+                </span>
+              </button>
+            </div>
+            <p class="t-meta c-muted px-[18px] pt-6 pb-10 lg:pb-0 m-0">One client in the studio at a time. Your session starts at the booked minute.</p>
+          </div>
+
+          <!-- Step 2: scheduler -->
+          <div id="book" class="col-span-12 lg:col-span-7 lg:pl-8">
+            <div class="step-head t-label"><span id="book-heading" class="num" tabindex="-1">STEP 02</span><span>— CHOOSE A TIME</span></div>
+
+            <div class="pt-5">
+              <div class="status-bar" data-status aria-live="polite">
+                <span class="status-live t-label"><span class="status-dot" aria-hidden="true"></span>SELECTED SERVICE</span>
+                <span class="swap t-label"><span data-status-name>01 // THE SIGNATURE FADE</span></span>
+                <span class="swap t-label ml-auto"><span data-status-meta>$45 · 45 MIN</span></span>
+              </div>
+              <div class="status-ref t-meta" data-status-ref hidden>
+                <i data-lucide="crosshair" class="icon"></i>
+                <span data-status-ref-text></span>
+                <button type="button" class="t-meta" data-status-ref-clear aria-label="Clear lookbook reference">CLEAR</button>
+              </div>
+              <p class="t-meta status-path mt-3 mb-4">EVENT PATH → <span data-status-path>calendly.com/21cutz-studio/signature-fade</span></p>
+
+              <div class="cal-frame" data-cal-frame>
+                <div id="calendly-embed" class="calendly-mount" data-auto-load="false" hidden></div>
+
+                <div class="cal-preview" data-cal-preview>
+                  <div class="cal-notice t-label">
+                    <span class="cal-notice-dot" aria-hidden="true"></span>
+                    <span data-pv-notice>CALENDLY SCHEDULER READY — CONNECT LIVE HANDLE IN CONFIG</span>
+                    <span class="cal-notice-tag t-meta">PREVIEW</span>
+                  </div>
+
+                  <div data-pv-main>
+                    <div class="cal-head">
+                      <div>
+                        <p class="t-meta c-muted m-0 mb-2">SESSION</p>
+                        <p class="t-display t-md m-0" data-pv-service>01 // THE SIGNATURE FADE</p>
+                      </div>
+                      <p class="t-label m-0" data-pv-meta>$45 · 45 MIN</p>
+                    </div>
+                    <div class="cal-bar">
+                      <p class="t-label m-0" data-pv-month>—</p>
+                      <div class="cal-pager">
+                        <button type="button" class="cal-page" data-pv-page="-1" aria-label="Previous week"><i data-lucide="chevron-left" class="icon"></i></button>
+                        <button type="button" class="cal-page" data-pv-page="1" aria-label="Next week"><i data-lucide="chevron-right" class="icon"></i></button>
+                      </div>
+                    </div>
+                    <div class="cal-days" data-pv-days role="group" aria-label="Choose a day"></div>
+                    <div class="cal-slots-head">
+                      <p class="t-label m-0" data-pv-slots-head>—</p>
+                      <p class="t-meta c-muted m-0" data-pv-tz></p>
+                    </div>
+                    <div class="cal-slots" data-pv-slots role="group" aria-label="Choose a time"></div>
+                    <div class="cal-foot">
+                      <div>
+                        <p class="t-meta c-muted m-0">SELECTED</p>
+                        <p class="t-label m-0" data-pv-selection aria-live="polite">NO SLOT SELECTED</p>
+                      </div>
+                      <button type="button" class="btn btn-primary" data-pv-confirm disabled>CONFIRM SLOT <span class="btn-arrow"><i data-lucide="arrow-right" class="icon"></i></span></button>
+                    </div>
+                  </div>
+
+                  <div class="cal-done" data-pv-done hidden>
+                    <p class="t-label c-muted m-0">PREVIEW — NOTHING WAS BOOKED</p>
+                    <p class="t-display t-lg cal-done-title m-0" tabindex="-1" data-pv-done-title>SLOT CONFIRMED.</p>
+                    <dl class="cal-done-list t-label">
+                      <div><dt>SERVICE</dt><dd data-pv-done-service></dd></div>
+                      <div><dt>WHEN</dt><dd data-pv-done-when></dd></div>
+                      <div data-pv-done-ref-row hidden><dt>REFERENCE</dt><dd data-pv-done-ref></dd></div>
+                    </dl>
+                    <p class="t-body c-dim m-0 max-w-[52ch]">
+                      This is the built-in preview. Once a live Calendly link is set in the config, this step hands over
+                      to Calendly for name, email and the confirmation message.
+                    </p>
+                    <div><button type="button" class="btn btn-ghost" data-pv-reset>CHOOSE ANOTHER TIME</button></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- =====================================================
+       05. FOOTER
+       ===================================================== -->
+  <footer class="site-footer">
+    <div class="wrap">
+      <div class="sec-label t-label">
+        <span class="num">21</span><span>//</span><span>STUDIO</span>
+        <span class="sec-rule"></span>
+        <span class="hidden sm:inline">STRICTLY BY APPOINTMENT</span>
+      </div>
+
+      <div class="footer-word-wrap mt-8" data-fit-wrap>
+        <p class="footer-word t-display" data-fit aria-label="21 cutz">
+          <span class="fchar" aria-hidden="true">2</span><span class="fchar" aria-hidden="true">1</span><span class="fchar" aria-hidden="true">&nbsp;</span><span class="fchar" aria-hidden="true">C</span><span class="fchar" aria-hidden="true">U</span><span class="fchar" aria-hidden="true">T</span><span class="fchar" aria-hidden="true">Z</span>
+        </p>
+      </div>
+
+      <div class="footer-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+        <div class="footer-cell">
+          <p class="t-label c-muted m-0 flex items-center gap-2"><i data-lucide="map-pin" class="icon"></i> LOCATION</p>
+          <p class="m-0 t-body">21 Mercer St, Suite 2B<br /><span class="c-muted">By Appointment Only</span></p>
+        </div>
+        <div class="footer-cell">
+          <p class="t-label c-muted m-0 flex items-center gap-2"><i data-lucide="clock" class="icon"></i> HOURS</p>
+          <dl class="hours t-meta">
+            <div><dt>Tue–Fri</dt><dd>10:00 – 20:00</dd></div>
+            <div><dt>Sat</dt><dd>09:00 – 17:00</dd></div>
+            <div><dt>Sun–Mon</dt><dd>Closed</dd></div>
+          </dl>
+        </div>
+        <div class="footer-cell">
+          <p class="t-label c-muted m-0 flex items-center gap-2"><i data-lucide="at-sign" class="icon"></i> DIRECT</p>
+          <p class="m-0 t-body flex flex-col gap-1">
+            <a href="https://instagram.com/21cutz" target="_blank" rel="noopener">Instagram (@21cutz)</a>
+            <a href="mailto:studio@21cutz.com">studio@21cutz.com</a>
+          </p>
+        </div>
+        <div class="footer-cell">
+          <p class="t-label c-muted m-0 flex items-center gap-2"><i data-lucide="navigation" class="icon"></i> NAVIGATION</p>
+          <button type="button" class="top-btn t-label" data-scroll-to="#top">BACK TO TOP <i data-lucide="arrow-up" class="icon"></i></button>
+        </div>
+      </div>
+
+      <div class="footer-base t-meta">
+        <span>© <span data-year>2026</span> 21 CUTZ. ALL CUTS ON FILE.</span>
+        <span>ONE CHAIR // NO WALK-INS</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- =====================================================
+       LIGHTBOX
+       ===================================================== -->
+  <div id="lightbox" class="lightbox" role="dialog" aria-modal="true" aria-labelledby="lb-title" aria-hidden="true" data-lenis-prevent>
+    <div class="lb-backdrop" data-lb-dismiss></div>
+    <div class="lb-shell">
+      <div class="lb-top">
+        <span class="t-label">INSPECTION // LOOKBOOK</span>
+        <span class="t-label c-muted" data-lb-counter>01 / 06</span>
+        <button type="button" class="lb-close t-label" data-lb-close aria-label="Close inspection">ESC <i data-lucide="x" class="icon"></i></button>
+      </div>
+      <div class="lb-body">
+        <div class="lb-stage" data-lb-dismiss>
+          <figure class="lb-frame frame" data-lb-frame>
+            <div class="lb-media" data-lb-media><img class="art-img" data-lb-img alt="" /></div>
+            <span class="g-chip g-chip-tl t-meta" data-lb-chip>#01</span>
+          </figure>
+        </div>
+        <aside class="lb-panel">
+          <div class="lb-panel-inner" data-lb-panel>
+            <p class="t-label c-muted m-0 lb-reveal" style="--d:0"><span data-lb-cat>SKIN FADE</span> // <span data-lb-id>ARCHIVE #01</span></p>
+            <h2 id="lb-title" class="t-display lb-title lb-reveal" style="--d:1" data-lb-title>HIGH SKIN FADE + TEXTURED CROP</h2>
+            <p class="t-body c-dim m-0 lb-reveal" style="--d:2" data-lb-note></p>
+            <dl class="lb-specs t-label lb-reveal" style="--d:3" data-lb-specs></dl>
+            <div class="flex flex-col gap-3 lb-reveal" style="--d:4">
+              <p class="t-meta c-muted m-0" data-lb-service></p>
+              <button type="button" class="btn btn-primary w-full" data-lb-book>BOOK THIS EXACT CUT <span class="btn-arrow"><i data-lucide="arrow-right" class="icon"></i></span></button>
+            </div>
+            <div class="lb-nav lb-reveal" style="--d:5">
+              <button type="button" class="btn btn-ghost" data-lb-prev><i data-lucide="arrow-left" class="icon"></i> PREV</button>
+              <button type="button" class="btn btn-ghost" data-lb-next>NEXT <i data-lucide="arrow-right" class="icon"></i></button>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+
+  <!-- =====================================================
+       LIBRARIES
+       ===================================================== -->
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/Flip.min.js"></script>
+  <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+  <script src="https://assets.calendly.com/assets/external/widget.js" async></script>
+
+  <script>
+    /* ============================================================
+       21 CUTZ — CONFIG
+       ------------------------------------------------------------
+       Paste your live Calendly link here (no trailing slash):
+         const CALENDLY_BASE_URL = "https://calendly.com/your-handle";
+
+       Each service row in the booking section has a data-slug
+       (signature-fade, scissor-architecture, 21-full-ritual,
+       beard-razor-sculpt). Name your Calendly event links the same,
+       or edit those data-slug values to match yours.
+
+       While the placeholder below is unchanged, the booking frame
+       runs the built-in preview scheduler instead of Calendly.
+       ============================================================ */
+    const CALENDLY_BASE_URL = "https://calendly.com/21cutz-studio";
+
+    (() => {
+      'use strict';
+
+      const CALENDLY_PLACEHOLDER = 'https://calendly.com/21cutz-studio';
+
+      /* ----------------------------------------------------------
+         0. ENVIRONMENT
+         ---------------------------------------------------------- */
+      const root = document.documentElement;
+      const $ = (s, c = document) => c.querySelector(s);
+      const $$ = (s, c = document) => Array.from(c.querySelectorAll(s));
+      const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const G = window.gsap;
+      const ST = window.ScrollTrigger;
+      const FLIP = window.Flip;
+      const HAS_GSAP = !!(G && ST);
+      const MOTION = HAS_GSAP && !REDUCED && !root.classList.contains('motion-failsafe');
+
+      if (G && ST) G.registerPlugin(ST);
+      if (G && FLIP) G.registerPlugin(FLIP);
+
+      /* Exact cubic-bezier easing (shared by GSAP, Lenis and WAAPI) */
+      function cubicBezier(x1, y1, x2, y2) {
+        const cx = 3 * x1, bx = 3 * (x2 - x1) - cx, ax = 1 - cx - bx;
+        const cy = 3 * y1, by = 3 * (y2 - y1) - cy, ay = 1 - cy - by;
+        const sx = t => ((ax * t + bx) * t + cx) * t;
+        const sy = t => ((ay * t + by) * t + cy) * t;
+        const dx = t => (3 * ax * t + 2 * bx) * t + cx;
+        const solve = x => {
+          let t = x;
+          for (let i = 0; i < 8; i++) {
+            const e = sx(t) - x;
+            if (Math.abs(e) < 1e-6) return t;
+            const d = dx(t);
+            if (Math.abs(d) < 1e-6) break;
+            t -= e / d;
+          }
+          let lo = 0, hi = 1;
+          t = x;
+          for (let i = 0; i < 40; i++) {
+            const v = sx(t);
+            if (Math.abs(v - x) < 1e-6) break;
+            if (x > v) lo = t; else hi = t;
+            t = (lo + hi) / 2;
+          }
+          return t;
+        };
+        return p => (p <= 0 ? 0 : p >= 1 ? 1 : sy(solve(p)));
+      }
+      const EASE_SPATIAL = cubicBezier(0.16, 1, 0.3, 1);
+      const EASE_UI = cubicBezier(0.22, 1, 0.36, 1);
+      const CSS_SPATIAL = 'cubic-bezier(0.16, 1, 0.3, 1)';
+      const CSS_UI = 'cubic-bezier(0.22, 1, 0.36, 1)';
+
+      const pad = n => String(n).padStart(2, '0');
+      const debounce = (fn, ms = 150) => { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; };
+      const hashStr = s => { let h = 2166136261; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; };
+      const rng = seed => {
+        let a = seed >>> 0;
+        return () => {
+          a = (a + 0x6D2B79F5) >>> 0;
+          let t = a;
+          t = Math.imul(t ^ (t >>> 15), t | 1);
+          t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+          return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+        };
+      };
+      const canAnimate = el => !!(el && typeof el.animate === 'function' && !REDUCED);
+
+      /* ----------------------------------------------------------
+         HERO ENTRANCE — runs first so nothing later can block it.
+         Masked line reveal + clip-path expansion of the visual frame.
+         ---------------------------------------------------------- */
+      clearTimeout(window.__motionFailsafe);
+      if (MOTION) {
+        try {
+          const tl = G.timeline({ defaults: { ease: EASE_SPATIAL } });
+          tl.fromTo('[data-intro="nav"]', { yPercent: -100, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 1 }, 0)
+            .fromTo('[data-hero-frame]', { clipPath: 'inset(14% 18% 14% 18%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.6 }, 0.1)
+            .fromTo('[data-hero-frame] .art-img', { scale: 1.22 }, { scale: 1, duration: 2.1 }, 0.1)
+            .fromTo('.hero .line-inner', { yPercent: 105 }, { yPercent: 0, duration: 1.25, stagger: 0.1 }, 0.18)
+            .fromTo('[data-hero-fade]', { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 1, stagger: 0.07 }, 0.55)
+            .fromTo('[data-hud]', { opacity: 0 }, { opacity: 1, duration: 0.8, stagger: 0.06, ease: EASE_UI }, 0.95);
+        } catch (err) {
+          root.classList.remove('motion-ok');
+        }
+      } else {
+        root.classList.remove('motion-ok');
+      }
+
+      /* ----------------------------------------------------------
+         1. ICONS
+         ---------------------------------------------------------- */
+      if (window.lucide && typeof window.lucide.createIcons === 'function') {
+        try { window.lucide.createIcons({ attrs: { 'stroke-width': 1.5 } }); } catch (e) { /* icons are decorative */ }
+      }
+
+      /* ----------------------------------------------------------
+         2. DARKROOM — procedural halftone artwork
+            Paints a soft grayscale "negative" on a small canvas,
+            then develops it as a halftone (dot or line screen).
+            Any img[data-art] that already has a src is left alone,
+            so real photos drop straight into the data-image-slots.
+         ---------------------------------------------------------- */
+      const Darkroom = (() => {
+        const W = 300, H = 400;
+        const g = (v, a = 1) => `rgba(${v | 0},${v | 0},${v | 0},${a})`;
+        const P = d => new Path2D(d);
+        const SHAPES = {
+          body: P('M150,72 C185,72 207,98 208,132 C209,145 212,152 212,158 C210,164 206,168 207,174 C212,186 224,196 229,203 C224,209 216,211 211,212 C213,218 216,222 215,226 C211,229 208,231 209,233 C213,236 214,240 212,244 C207,248 206,252 208,258 C209,268 200,276 186,278 C180,280 176,286 175,296 L178,330 C200,345 250,352 330,380 L330,440 L-30,440 L-30,392 C10,360 80,338 112,326 C118,300 116,280 112,262 C96,240 88,205 90,170 C92,110 115,72 150,72 Z'),
+          shirt: P('M-30,394 C10,362 80,340 112,326 C130,342 158,348 179,332 C204,347 252,354 330,382 L330,440 L-30,440 Z'),
+          scalp: P('M207,126 C206,96 186,66 150,66 C112,66 86,104 87,160 C88,192 95,216 106,236 L121,240 C127,224 129,208 132,196 C140,186 151,182 162,185 L167,198 C170,180 171,162 178,150 C188,142 199,136 207,126 Z'),
+          beardSculpt: P('M164,190 L205,221 C209,216 212,213 213,213 C216,217 217,222 216,227 L208,229 C206,233 208,237 213,239 C215,246 213,252 211,258 C214,266 210,276 199,284 L150,270 C140,258 136,240 140,222 C146,208 154,198 164,190 Z'),
+          beardFull: P('M162,186 C176,203 192,213 206,217 C210,214 213,213 214,214 C217,218 218,223 217,228 L209,230 C207,234 209,238 214,240 C219,252 219,268 215,283 C209,297 195,305 178,303 L146,284 C134,266 132,244 137,222 C143,205 151,194 162,186 Z')
+        };
+        const VOLUME = {
+          crop: P('M215,134 C217,104 195,57 150,55 C106,55 80,98 83,148 L150,152 Z'),
+          flow: P('M219,128 C227,92 201,41 150,39 C99,39 69,88 74,154 C77,190 87,214 101,232 L150,156 Z'),
+          crew: P('M211,130 C213,100 192,61 150,60 C110,60 85,98 86,148 L150,150 Z'),
+          part: P('M216,132 C221,100 199,51 152,49 C106,49 80,94 83,148 L150,152 Z')
+        };
+        /* Fade = alpha ramp applied to the hair layer: [offset, opacity] stops
+           between a weight line (top) and the perimeter (bottom). */
+        const FADES = {
+          high:    { top: 128, bottom: 174, tilt: 0.12, stops: [[0, 1], [0.22, 0.5], [1, 0]] },
+          mid:     { top: 134, bottom: 198, tilt: 0.15, stops: [[0, 1], [0.25, 0.55], [1, 0]] },
+          drop:    { top: 138, bottom: 216, tilt: 0.5,  stops: [[0, 1], [0.22, 0.55], [1, 0]] },
+          taper:   { top: 132, bottom: 238, tilt: 0.2,  stops: [[0, 1], [0.15, 0.6], [0.7, 0.32], [1, 0]] },
+          scissor: { top: 146, bottom: 238, tilt: 0.15, stops: [[0, 1], [0.3, 0.72], [1, 0.42]] },
+          crew:    { top: 132, bottom: 232, tilt: 0.15, stops: [[0, 1], [0.2, 0.62], [1, 0.3]] }
+        };
+        const OUTLINE = { crop: [66, 80], flow: [72, 95], crew: [63, 74], part: [67, 86] };
+
+        /* Artwork recipes — one per data-art key */
+        const ART = {
+          hero: {
+            size: [900, 1200], seed: 2101, facing: 'left', scale: 1.1, tx: 4, ty: 16,
+            hair: 'crop', fade: 'high', rim: 0.55,
+            backdrop: { base: 3, halo: [196, 170, 175, 118], band: [42, 26, 46] },
+            mode: 'dots', cell: 7, angle: 45, contrast: 1.18, invert: false
+          },
+          a01: {
+            size: [800, 1000], seed: 101, facing: 'right', scale: 1.05, tx: -6, ty: 10,
+            hair: 'crop', fade: 'high', rim: 0.4,
+            backdrop: { base: 4, halo: [112, 168, 160, 104] },
+            mode: 'dots', cell: 7, angle: 45, contrast: 1.15, invert: false
+          },
+          a02: {
+            size: [800, 1000], seed: 202, facing: 'left', scale: 1.12, tx: 0, ty: 22,
+            hair: 'flow', fade: 'scissor', hairTone: 20, skinMid: 178, skinLo: 118,
+            backdrop: { base: 232, halo: [150, 160, 190, 255] },
+            mode: 'dots', cell: 7, angle: 45, contrast: 1.2, invert: true, vignette: 0.12
+          },
+          a03: {
+            size: [800, 1000], seed: 303, facing: 'right', scale: 1.28, tx: -26, ty: -30,
+            hair: 'crew', fade: 'mid', beard: 'sculpt', beardTone: 20, rim: 0.35,
+            backdrop: { base: 4, band: [250, 40, 70], halo: [80, 120, 140, 70] },
+            mode: 'dots', cell: 7, angle: 45, contrast: 1.2, invert: false
+          },
+          a04: {
+            size: [800, 1000], seed: 404, facing: 'left', scale: 1.04, tx: 0, ty: 14,
+            hair: 'part', fade: 'drop', hairTone: 18, skinMid: 178, skinLo: 118,
+            backdrop: { base: 236, halo: [170, 150, 170, 255] },
+            mode: 'dots', cell: 7, angle: 45, contrast: 1.18, invert: true, vignette: 0.12
+          },
+          a05: {
+            size: [800, 1000], seed: 505, facing: 'right', scale: 0.94, tx: 0, ty: 26,
+            hair: 'crew', fade: 'crew', rim: 0.45,
+            backdrop: { base: 5, halo: [120, 150, 170, 96], grid: 0.08 },
+            mode: 'lines', cell: 6, contrast: 1.15, invert: false
+          },
+          a06: {
+            size: [800, 1000], seed: 606, facing: 'left', scale: 1.22, tx: -14, ty: -6,
+            hair: 'crop', fade: 'taper', beard: 'full', beardTone: 18, skinMid: 180, skinLo: 122,
+            backdrop: { base: 236, halo: [170, 150, 180, 255] },
+            mode: 'dots', cell: 7, angle: 45, contrast: 1.2, invert: true, vignette: 0.12
+          },
+          portrait: {
+            size: [800, 1067], seed: 2121, facing: 'right', scale: 1.0, tx: -4, ty: 20,
+            hair: 'crop', fade: 'mid', beard: 'sculpt', beardTone: 52, skinMid: 176, skinLo: 112,
+            backdrop: { base: 238, halo: [118, 160, 180, 255] },
+            mode: 'lines', cell: 6, contrast: 1.15, invert: true, vignette: 0.1
+          }
+        };
+
+        function radial(x, cx, cy, r, c0, c1) {
+          const rg = x.createRadialGradient(cx, cy, 0, cx, cy, r);
+          rg.addColorStop(0, c0);
+          rg.addColorStop(1, c1);
+          x.fillStyle = rg;
+          x.fillRect(cx - r, cy - r, r * 2, r * 2);
+        }
+
+        function paintBackdrop(x, b) {
+          x.fillStyle = g(b.base ?? 4);
+          x.fillRect(0, 0, W, H);
+          if (b.halo) { const [cx, cy, r, v] = b.halo; radial(x, cx, cy, r, g(v, 1), g(v, 0)); }
+          if (b.band) {
+            const [bx, bw, v] = b.band;
+            const lg = x.createLinearGradient(bx - bw, 0, bx + bw, 0);
+            lg.addColorStop(0, g(v, 0)); lg.addColorStop(0.5, g(v, 0.9)); lg.addColorStop(1, g(v, 0));
+            x.fillStyle = lg; x.fillRect(0, 0, W, H);
+          }
+          if (b.grid) {
+            x.strokeStyle = g(255, b.grid); x.lineWidth = 0.8;
+            for (let gx = 25; gx < W; gx += 50) { x.beginPath(); x.moveTo(gx, 0); x.lineTo(gx, H); x.stroke(); }
+            for (let gy = 25; gy < H; gy += 50) { x.beginPath(); x.moveTo(0, gy); x.lineTo(W, gy); x.stroke(); }
+          }
+        }
+
+        function hairStroke(style, px, py, r) {
+          switch (style) {
+            case 'flow': return { a: Math.PI - 0.05 + (py - 80) * 0.006 + (r() - 0.5) * 0.45, l: 16 + r() * 22, w: 0.8 + r() * 1.4, bx: 0, by: -4 - r() * 6 };
+            case 'crew': return { a: -Math.PI / 2 + (px - 150) * 0.008 + (r() - 0.5) * 0.7, l: 3 + r() * 5, w: 0.8 + r() * 1.2, bx: 0, by: 0 };
+            case 'part': {
+              const above = py < 104 - (204 - px) * 0.1;
+              return { a: above ? -0.25 + (r() - 0.5) * 0.6 : Math.PI * 0.72 + (r() - 0.5) * 0.5, l: 8 + r() * 14, w: 0.8 + r() * 1.3, bx: 0, by: above ? -3 : 2 };
+            }
+            default: return { a: 0.55 + (r() - 0.5) * 1.6, l: 5 + r() * 9, w: 0.9 + r() * 1.5, bx: (r() - 0.5) * 4, by: (r() - 0.5) * 4 };
+          }
+        }
+
+        function ear(x, s) {
+          x.save();
+          x.translate(137, 192); x.rotate(-0.18);
+          x.fillStyle = g(s.earTone ?? 150);
+          x.beginPath(); x.ellipse(0, 0, 10, 17, 0, 0, Math.PI * 2); x.fill();
+          x.fillStyle = g(70);
+          x.beginPath(); x.ellipse(1.5, 1, 5, 10, 0, 0, Math.PI * 2); x.fill();
+          x.strokeStyle = g(30, 0.6); x.lineWidth = 1;
+          x.beginPath(); x.ellipse(0, 0, 10, 17, 0, 0, Math.PI * 2); x.stroke();
+          x.restore();
+        }
+
+        function hairLayer(x, s, r, T) {
+          if (!s.hair) return;
+          const L = document.createElement('canvas');
+          L.width = W; L.height = H;
+          const l = L.getContext('2d');
+          l.setTransform(T.a, T.b, T.c, T.d, T.e, T.f);
+          const region = new Path2D();
+          region.addPath(SHAPES.scalp);
+          region.addPath(VOLUME[s.hair] || VOLUME.crop);
+          l.fillStyle = g(s.hairTone ?? 24);
+          l.fill(region);
+
+          l.save();
+          l.clip(region);
+          l.lineCap = 'round';
+          const N = { crop: 900, flow: 640, crew: 1100, part: 820 }[s.hair] || 800;
+          for (let i = 0; i < N; i++) {
+            const px = 76 + r() * 148, py = 36 + r() * 210;
+            const st = hairStroke(s.hair, px, py, r);
+            const lit = py < 118 && px > 132 && r() < (s.hair === 'flow' ? 0.5 : 0.32);
+            l.strokeStyle = lit ? g(110 + r() * 80, 0.28 + r() * 0.25) : g(r() * 14, 0.5 + r() * 0.4);
+            l.lineWidth = st.w;
+            const ex = px + Math.cos(st.a) * st.l, ey = py + Math.sin(st.a) * st.l;
+            l.beginPath(); l.moveTo(px, py);
+            l.quadraticCurveTo((px + ex) / 2 + st.bx, (py + ey) / 2 + st.by, ex, ey);
+            l.stroke();
+          }
+          radial(l, 184, 86, s.hair === 'flow' ? 60 : 44, g(255, s.hair === 'flow' ? 0.2 : 0.15), g(255, 0));
+          l.restore();
+
+          /* broken silhouette: short tufts breaking the outline */
+          const [rx, ry] = OUTLINE[s.hair] || OUTLINE.crop;
+          l.lineCap = 'round';
+          for (let i = 0; i < 150; i++) {
+            const th = -Math.PI + 0.25 + r() * (Math.PI - 0.4);
+            const nx = Math.cos(th), ny = Math.sin(th);
+            const bx = 150 + rx * nx, by = 135 + ry * ny;
+            const a = th + (r() - 0.5) * 0.9 + (s.hair === 'flow' ? -0.5 : 0);
+            const len = 3 + r() * (s.hair === 'crew' ? 4 : 8);
+            l.strokeStyle = g(r() * 22, 0.85);
+            l.lineWidth = 1 + r() * 1.3;
+            l.beginPath(); l.moveTo(bx - nx * 3, by - ny * 3);
+            l.lineTo(bx + Math.cos(a) * len, by + Math.sin(a) * len); l.stroke();
+          }
+
+          if (s.hair === 'crop') {
+            l.lineCap = 'round';
+            for (let i = 0; i < 46; i++) {
+              const t = r(), px = 196 + t * 18, py = 104 + t * 26 + r() * 6;
+              const a = 0.6 + r() * 0.9, len = 5 + r() * 8;
+              l.strokeStyle = g(r() * 20, 0.85); l.lineWidth = 1 + r() * 1.4;
+              l.beginPath(); l.moveTo(px - 6, py - 4); l.lineTo(px + Math.cos(a) * len, py + Math.sin(a) * len); l.stroke();
+            }
+          }
+
+          const f = FADES[s.fade];
+          if (f) {
+            l.globalCompositeOperation = 'destination-in';
+            const fg = l.createLinearGradient(160, f.top, 160 + (f.bottom - f.top) * f.tilt, f.bottom);
+            f.stops.forEach(([o, a]) => fg.addColorStop(o, `rgba(0,0,0,${a})`));
+            l.fillStyle = fg;
+            l.fillRect(-300, -300, 900, 1000);
+            l.globalCompositeOperation = 'source-over';
+          }
+
+          x.save();
+          x.setTransform(1, 0, 0, 1, 0, 0);
+          x.drawImage(L, 0, 0);
+          x.restore();
+
+          if (s.hair === 'part') {
+            x.strokeStyle = g(205, 0.9); x.lineWidth = 1.5;
+            x.beginPath(); x.moveTo(205, 101); x.quadraticCurveTo(160, 90, 108, 97); x.stroke();
+          }
+        }
+
+        function beard(x, s, r) {
+          const path = s.beard === 'full' ? SHAPES.beardFull : SHAPES.beardSculpt;
+          x.fillStyle = g(s.beardTone ?? 26);
+          x.fill(path);
+          x.save();
+          x.clip(path);
+          x.lineCap = 'round';
+          for (let i = 0; i < 520; i++) {
+            const px = 132 + r() * 92, py = 184 + r() * 124;
+            const a = Math.PI / 2 + (r() - 0.5) * 0.9 - (px - 170) * 0.006, len = 3 + r() * 6;
+            const lit = px > 186 && py < 250 && r() < 0.25;
+            x.strokeStyle = lit ? g(120 + r() * 60, 0.3) : g(r() * 18, 0.6);
+            x.lineWidth = 0.8 + r();
+            x.beginPath(); x.moveTo(px, py); x.lineTo(px + Math.cos(a) * len, py + Math.sin(a) * len); x.stroke();
+          }
+          const sh = x.createLinearGradient(0, 250, 0, 305);
+          sh.addColorStop(0, g(0, 0)); sh.addColorStop(1, g(0, 0.5));
+          x.fillStyle = sh; x.fill(path);
+          x.restore();
+          if (s.beard === 'sculpt') {
+            x.strokeStyle = g(245, 0.75); x.lineWidth = 1.2;
+            x.beginPath(); x.moveTo(163, 187); x.lineTo(205, 218); x.stroke();
+          }
+          x.strokeStyle = g(200, 0.6); x.lineWidth = 1.4;
+          x.beginPath(); x.moveTo(212, 241); x.lineTo(206, 241); x.stroke();
+        }
+
+        function paintFigure(x, s, r, T) {
+          const skin = x.createLinearGradient(232, 150, 90, 230);
+          skin.addColorStop(0, g(s.skinHi ?? 226));
+          skin.addColorStop(0.5, g(s.skinMid ?? 150));
+          skin.addColorStop(1, g(s.skinLo ?? 58));
+          x.fillStyle = skin;
+          x.fill(SHAPES.body);
+
+          x.save();
+          x.clip(SHAPES.body);
+          radial(x, 198, 168, 14, g(0, 0.6), g(0, 0));
+          radial(x, 194, 199, 22, g(255, 0.22), g(255, 0));
+          radial(x, 222, 197, 9, g(255, 0.3), g(255, 0));
+          radial(x, 204, 132, 26, g(255, 0.18), g(255, 0));
+          radial(x, 180, 292, 48, g(0, 0.58), g(0, 0));
+          radial(x, 150, 252, 42, g(0, 0.42), g(0, 0));
+          radial(x, 132, 302, 54, g(0, 0.35), g(0, 0));
+          x.fillStyle = g(0, 0.55);
+          x.beginPath(); x.ellipse(211, 207, 3.4, 2, 0.3, 0, Math.PI * 2); x.fill();
+          x.strokeStyle = g(0, 0.5); x.lineWidth = 1.6; x.lineCap = 'round';
+          x.beginPath(); x.moveTo(209, 233); x.quadraticCurveTo(203, 233.5, 197, 231); x.stroke();
+          x.strokeStyle = g(s.hairTone ?? 24, 0.9); x.lineWidth = 3.2;
+          x.beginPath(); x.moveTo(186, 158); x.quadraticCurveTo(198, 154, 209, 158); x.stroke();
+          if (s.rim) {
+            const rg = x.createLinearGradient(200, 0, 88, 0);
+            rg.addColorStop(0, g(255, 0)); rg.addColorStop(1, g(255, s.rim));
+            x.strokeStyle = rg; x.lineWidth = 7; x.stroke(SHAPES.body);
+          }
+          x.restore();
+
+          x.fillStyle = g(s.shirtTone ?? 16);
+          x.fill(SHAPES.shirt);
+          x.save(); x.clip(SHAPES.shirt); radial(x, 238, 366, 80, g(255, 0.16), g(255, 0)); x.restore();
+          x.strokeStyle = g(90, 0.8); x.lineWidth = 1.4;
+          x.beginPath(); x.moveTo(112, 326); x.bezierCurveTo(130, 342, 158, 348, 179, 332); x.stroke();
+
+          if (s.hair === 'flow') ear(x, s);
+          hairLayer(x, s, r, T);
+          if (s.hair !== 'flow') ear(x, s);
+          if (s.beard) beard(x, s, r);
+        }
+
+        function paintSource(cfg) {
+          const c = document.createElement('canvas');
+          c.width = W; c.height = H;
+          const x = c.getContext('2d', { willReadFrequently: true });
+          const r = rng(cfg.seed || 21);
+          paintBackdrop(x, cfg.backdrop || {});
+          const s = cfg.scale || 1, flip = cfg.facing === 'left' ? -1 : 1;
+          const T = new DOMMatrix().translate(150, 200).scale(s * flip, s).translate(-150 + (cfg.tx || 0), -200 + (cfg.ty || 0));
+          x.save();
+          x.setTransform(T.a, T.b, T.c, T.d, T.e, T.f);
+          paintFigure(x, cfg, r, T);
+          x.restore();
+          const v = x.createRadialGradient(150, 190, 120, 150, 200, 290);
+          v.addColorStop(0, g(0, 0)); v.addColorStop(1, g(0, cfg.vignette ?? 0.55));
+          x.fillStyle = v; x.fillRect(0, 0, W, H);
+          return c;
+        }
+
+        function develop(src, outW, outH, o) {
+          const sd = src.getContext('2d', { willReadFrequently: true }).getImageData(0, 0, W, H).data;
+          const out = document.createElement('canvas');
+          out.width = outW; out.height = outH;
+          const c = out.getContext('2d');
+          const r = rng((o.seed || 1) * 7);
+          c.fillStyle = o.invert ? '#F5F5F5' : '#050505';
+          c.fillRect(0, 0, outW, outH);
+
+          const scale = Math.max(outW / W, outH / H);
+          const ox = (outW - W * scale) / 2, oy = (outH - H * scale) / 2;
+          const k = o.contrast || 1.15;
+          const sample = (px, py) => {
+            let sx = (px - ox) / scale, sy = (py - oy) / scale;
+            sx = sx < 0 ? 0 : sx > W - 1.001 ? W - 1.001 : sx;
+            sy = sy < 0 ? 0 : sy > H - 1.001 ? H - 1.001 : sy;
+            const x0 = sx | 0, y0 = sy | 0, fx = sx - x0, fy = sy - y0;
+            const i00 = (y0 * W + x0) * 4, i10 = i00 + 4, i01 = i00 + W * 4, i11 = i01 + 4;
+            const v = (sd[i00] * (1 - fx) + sd[i10] * fx) * (1 - fy) + (sd[i01] * (1 - fx) + sd[i11] * fx) * fy;
+            let t = ((v / 255) - 0.5) * k + 0.5;
+            return t < 0 ? 0 : t > 1 ? 1 : t;
+          };
+
+          c.fillStyle = o.invert ? '#050505' : '#F2F2F2';
+          c.beginPath();
+          if (o.mode === 'lines') {
+            const step = o.cell || 6;
+            for (let y = step / 2; y < outH + step; y += step) {
+              for (let px = 0; px < outW; px += 3) {
+                const lum = sample(px + 1.5, y);
+                const ink = o.invert ? 1 - lum : lum;
+                const h = step * 0.95 * ink;
+                if (h > 0.35) c.rect(px, y - h / 2, 3.1, h);
+              }
+            }
+          } else {
+            const rad = (o.angle ?? 45) * Math.PI / 180, ca = Math.cos(rad), sa = Math.sin(rad);
+            const cell = o.cell || 7, half = Math.hypot(outW, outH) / 2 + cell;
+            const cx = outW / 2, cy = outH / 2, maxR = cell * 0.56;
+            for (let v = -half; v <= half; v += cell) {
+              for (let u = -half; u <= half; u += cell) {
+                const px = cx + u * ca - v * sa, py = cy + u * sa + v * ca;
+                if (px < -cell || py < -cell || px > outW + cell || py > outH + cell) continue;
+                const lum = sample(px, py);
+                const rr = maxR * Math.sqrt(o.invert ? 1 - lum : lum);
+                if (rr < 0.45) continue;
+                c.moveTo(px + rr, py);
+                c.arc(px, py, rr, 0, Math.PI * 2);
+              }
+            }
+          }
+          c.fill();
+
+          /* darkroom grain + dust */
+          const specks = Math.round(outW * outH * 0.005);
+          for (let i = 0; i < specks; i++) {
+            const light = r() < 0.5;
+            c.fillStyle = light ? `rgba(245,245,245,${0.05 + r() * 0.18})` : `rgba(5,5,5,${0.05 + r() * 0.18})`;
+            c.fillRect(r() * outW, r() * outH, 1 + r(), 1 + r());
+          }
+          c.lineWidth = 0.8;
+          for (let i = 0; i < 5; i++) {
+            const x0 = r() * outW, y0 = r() * outH;
+            c.strokeStyle = o.invert ? 'rgba(5,5,5,.22)' : 'rgba(245,245,245,.2)';
+            c.beginPath(); c.moveTo(x0, y0);
+            c.quadraticCurveTo(x0 + (r() - 0.5) * 30, y0 + (r() - 0.5) * 30, x0 + (r() - 0.5) * 40, y0 + (r() - 0.5) * 40);
+            c.stroke();
+          }
+          return out;
+        }
+
+        function render(img) {
+          return new Promise(resolve => {
+            const cfg = ART[img.dataset.art];
+            if (!cfg || img.getAttribute('src')) { resolve(); return; }
+            let out;
+            try {
+              out = develop(paintSource(cfg), cfg.size[0], cfg.size[1], cfg);
+            } catch (err) { resolve(); return; }
+            const done = url => {
+              img.addEventListener('load', () => resolve(), { once: true });
+              img.addEventListener('error', () => resolve(), { once: true });
+              img.dataset.generated = 'true';
+              img.src = url;
+            };
+            if (out.toBlob) {
+              out.toBlob(b => done(b ? URL.createObjectURL(b) : out.toDataURL('image/png')), 'image/png');
+            } else {
+              done(out.toDataURL('image/png'));
+            }
+          });
+        }
+
+        function grainTile() {
+          const c = document.createElement('canvas');
+          c.width = c.height = 180;
+          const x = c.getContext('2d');
+          const id = x.createImageData(180, 180), d = id.data;
+          for (let i = 0; i < d.length; i += 4) {
+            const v = Math.random() < 0.5 ? 0 : 255;
+            d[i] = d[i + 1] = d[i + 2] = v;
+            d[i + 3] = Math.random() < 0.5 ? Math.random() * 90 : 0;
+          }
+          x.putImageData(id, 0, 0);
+          return c.toDataURL('image/png');
+        }
+
+        function developAll() {
+          const imgs = $$('img[data-art]').filter(i => !i.getAttribute('src'));
+          const first = imgs.filter(i => i.dataset.art === 'hero');
+          const rest = imgs.filter(i => i.dataset.art !== 'hero');
+          const idle = window.requestIdleCallback
+            ? fn => window.requestIdleCallback(fn, { timeout: 400 })
+            : fn => setTimeout(fn, 32);
+          const queue = [...first, ...rest];
+          const next = () => {
+            const img = queue.shift();
+            if (!img) return;
+            render(img).then(() => idle(next));
+          };
+          next();
+        }
+
+        return { developAll, grainTile, ART };
+      })();
+
+      const grainEl = $('.grain');
+      if (grainEl) {
+        try { grainEl.style.backgroundImage = `url(${Darkroom.grainTile()})`; } catch (e) { /* optional texture */ }
+      }
+      Darkroom.developAll();
+
+      /* ----------------------------------------------------------
+         3. LENIS SMOOTH SCROLL (synced to ScrollTrigger)
+         ---------------------------------------------------------- */
+      let lenis = null;
+      if (window.Lenis && !REDUCED) {
+        try {
+          lenis = new window.Lenis({ lerp: 0.085, smoothWheel: true, wheelMultiplier: 0.95, touchMultiplier: 1.4 });
+          if (HAS_GSAP) {
+            lenis.on('scroll', ST.update);
+            G.ticker.add(time => lenis.raf(time * 1000));
+            G.ticker.lagSmoothing(0);
+          } else {
+            const raf = t => { lenis.raf(t); requestAnimationFrame(raf); };
+            requestAnimationFrame(raf);
+          }
+        } catch (e) { lenis = null; }
+      }
+
+      const navEl = $('#site-nav');
+      const navH = () => (navEl ? navEl.offsetHeight : 64);
+
+      function scrollToTarget(target) {
+        const isTop = target === '#top' || target === 0;
+        const el = isTop ? null : (typeof target === 'string' ? $(target) : target);
+        if (!isTop && !el) return;
+        if (lenis) {
+          lenis.scrollTo(isTop ? 0 : el, { offset: isTop ? 0 : -(navH() + 8), duration: 1.5, easing: EASE_SPATIAL, force: true });
+          return;
+        }
+        const y = isTop ? 0 : el.getBoundingClientRect().top + window.scrollY - navH() - 8;
+        window.scrollTo({ top: Math.max(0, y), behavior: REDUCED ? 'auto' : 'smooth' });
+      }
+
+      /* Scroll lock shared by drawer + lightbox */
+      const locks = new Set();
+      function lockScroll(on, key) {
+        if (on) locks.add(key); else locks.delete(key);
+        const locked = locks.size > 0;
+        root.classList.toggle('is-locked', locked);
+        if (lenis) { if (locked) lenis.stop(); else lenis.start(); }
+      }
+
+      /* ----------------------------------------------------------
+         4. NAVIGATION — anchors, drawer, active state, progress
+         ---------------------------------------------------------- */
+      const drawer = $('#drawer');
+      const burger = $('#burger');
+      let drawerOpen = false;
+      if (drawer) drawer.inert = true;
+
+      function setDrawer(open) {
+        if (!drawer || !burger || open === drawerOpen) return;
+        drawerOpen = open;
+        drawer.classList.toggle('is-open', open);
+        drawer.setAttribute('aria-hidden', String(!open));
+        drawer.inert = !open;
+        burger.classList.toggle('is-open', open);
+        burger.setAttribute('aria-expanded', String(open));
+        burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+        lockScroll(open, 'drawer');
+        if (open) {
+          const first = $('.drawer-link', drawer);
+          setTimeout(() => first && first.focus({ preventScroll: true }), 120);
+        }
+      }
+      if (burger) burger.addEventListener('click', () => setDrawer(!drawerOpen));
+      window.addEventListener('resize', debounce(() => { if (window.innerWidth >= 1024) setDrawer(false); }, 120));
+
+      document.addEventListener('click', e => {
+        const trigger = e.target.closest('a[href^="#"], [data-scroll-to]');
+        if (!trigger) return;
+        const sel = trigger.getAttribute('data-scroll-to') || trigger.getAttribute('href');
+        if (!sel || sel === '#') return;
+        if (sel !== '#top' && !document.querySelector(sel)) return;
+        e.preventDefault();
+        if (drawerOpen) {
+          setDrawer(false);
+          setTimeout(() => scrollToTarget(sel), 80);
+        } else {
+          scrollToTarget(sel);
+        }
+      });
+
+      const progressEl = $('[data-progress]');
+      const navLinks = $$('[data-nav]');
+      if (ST) {
+        ['work', 'about', 'services'].forEach(id => {
+          const link = navLinks.find(l => l.dataset.nav === id);
+          const section = document.getElementById(id);
+          if (!link || !section) return;
+          ST.create({
+            trigger: section, start: 'top 55%', end: 'bottom 55%',
+            onToggle: self => link.classList.toggle('is-active', self.isActive)
+          });
+        });
+        if (progressEl) {
+          ST.create({ start: 0, end: 'max', onUpdate: self => { progressEl.style.transform = `scaleX(${self.progress.toFixed(4)})`; } });
+        }
+      } else if (progressEl) {
+        const upd = () => {
+          const max = document.documentElement.scrollHeight - window.innerHeight;
+          progressEl.style.transform = `scaleX(${max > 0 ? (window.scrollY / max).toFixed(4) : 0})`;
+        };
+        window.addEventListener('scroll', upd, { passive: true });
+        upd();
+      }
+
+      /* ----------------------------------------------------------
+         6. KINETIC TICKER
+         ---------------------------------------------------------- */
+      (function initTicker() {
+        const track = $('[data-ticker]');
+        if (!track) return;
+        const base = $('.ticker-group', track);
+        if (!base) return;
+        const unit = Array.from(base.children).map(n => n.cloneNode(true));
+        let guard = 0;
+        while (base.scrollWidth < window.innerWidth * 1.25 && guard < 8) {
+          unit.forEach(n => base.appendChild(n.cloneNode(true)));
+          guard++;
+        }
+        track.appendChild(base.cloneNode(true));
+        if (REDUCED) return;
+        if (MOTION) {
+          const tween = G.to(track, { xPercent: -50, duration: 46, ease: 'none', repeat: -1 });
+          let settle;
+          ST.create({
+            start: 0, end: 'max',
+            onUpdate: self => {
+              const boost = 1 + Math.min(5, Math.abs(self.getVelocity()) / 420);
+              G.to(tween, { timeScale: boost, duration: 0.2, ease: 'none', overwrite: true });
+              clearTimeout(settle);
+              settle = setTimeout(() => G.to(tween, { timeScale: 1, duration: 0.9, ease: EASE_UI, overwrite: true }), 120);
+            }
+          });
+        } else {
+          track.classList.add('ticker-css');
+        }
+      })();
+
+      /* ----------------------------------------------------------
+         7. SCROLL REVEALS
+         ---------------------------------------------------------- */
+      if (MOTION) {
+        $$('[data-reveal="lines"]').forEach(el => {
+          G.fromTo($$('.line-inner', el), { yPercent: 105 }, {
+            yPercent: 0, duration: 1.2, ease: EASE_SPATIAL, stagger: 0.08,
+            scrollTrigger: { trigger: el, start: 'top 88%', once: true }
+          });
+        });
+        $$('[data-reveal="fade"]').forEach(el => {
+          G.fromTo(el, { opacity: 0, y: 26 }, {
+            opacity: 1, y: 0, duration: 1.1, ease: EASE_SPATIAL,
+            scrollTrigger: { trigger: el, start: 'top 90%', once: true }
+          });
+        });
+        $$('[data-rule]').forEach(el => {
+          G.fromTo(el, { scaleX: 0 }, {
+            scaleX: 1, duration: 1.4, ease: EASE_SPATIAL,
+            scrollTrigger: { trigger: el, start: 'top 92%', once: true }
+          });
+        });
+
+        const pImg = $('[data-parallax] .portrait-img');
+        if (pImg) {
+          G.fromTo(pImg, { yPercent: -6 }, {
+            yPercent: 6, ease: 'none',
+            scrollTrigger: { trigger: '[data-parallax]', start: 'top bottom', end: 'bottom top', scrub: true }
+          });
+        }
+
+        const sig = $('[data-signature]');
+        if (sig) {
+          G.fromTo(sig, { clipPath: 'inset(0% 100% 0% 0%)' }, {
+            clipPath: 'inset(0% 0% 0% 0%)', duration: 1.8, ease: EASE_SPATIAL,
+            scrollTrigger: { trigger: sig, start: 'top 92%', once: true }
+          });
+        }
+
+        const fchars = $$('.fchar');
+        if (fchars.length) {
+          G.fromTo(fchars, { yPercent: 102 }, {
+            yPercent: 0, duration: 1.3, ease: EASE_SPATIAL, stagger: 0.05,
+            scrollTrigger: { trigger: '[data-fit-wrap]', start: 'top 94%', once: true }
+          });
+        }
+      }
+
+      /* ----------------------------------------------------------
+         8. PREVIEW SCHEDULER (shown until a live Calendly link is set)
+         ---------------------------------------------------------- */
+      const WD = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+      const MO = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+      const MONTHS = ['JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE', 'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'];
+      const hhmm = m => `${pad(Math.floor(m / 60))}:${pad(m % 60)}`;
+      const fmtDay = d => `${WD[d.getDay()]} ${d.getDate()} ${MO[d.getMonth()]}`;
+
+      const Preview = (() => {
+        const el = $('[data-cal-preview]');
+        if (!el) return null;
+        const HOURS = { 2: [10, 20], 3: [10, 20], 4: [10, 20], 5: [10, 20], 6: [9, 17] };
+        const q = s => $(s, el);
+        const ui = {
+          notice: q('[data-pv-notice]'), main: q('[data-pv-main]'), done: q('[data-pv-done]'),
+          service: q('[data-pv-service]'), meta: q('[data-pv-meta]'), month: q('[data-pv-month]'),
+          days: q('[data-pv-days]'), slotsHead: q('[data-pv-slots-head]'), tz: q('[data-pv-tz]'),
+          slots: q('[data-pv-slots]'), selection: q('[data-pv-selection]'), confirm: q('[data-pv-confirm]'),
+          prev: q('[data-pv-page="-1"]'), next: q('[data-pv-page="1"]'),
+          doneTitle: q('[data-pv-done-title]'), doneService: q('[data-pv-done-service]'),
+          doneWhen: q('[data-pv-done-when]'), doneRef: q('[data-pv-done-ref]'), doneRefRow: q('[data-pv-done-ref-row]'),
+          reset: q('[data-pv-reset]')
+        };
+
+        const days = [];
+        const today = new Date(); today.setHours(0, 0, 0, 0);
+        for (let i = 1; days.length < 21 && i < 90; i++) {
+          const d = new Date(today); d.setDate(today.getDate() + i);
+          if (HOURS[d.getDay()]) days.push(d);
+        }
+        const PAGES = Math.ceil(days.length / 7);
+        const busyCache = new Map();
+        let svc = null, ref = null, page = 0, dayIdx = null, slotMin = null;
+
+        try {
+          const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+          if (tz && ui.tz) ui.tz.textContent = `TIMES SHOWN IN ${tz.replace(/_/g, ' ').toUpperCase()}`;
+        } catch (e) { /* timezone label is optional */ }
+
+        function busyBlocks(d) {
+          const key = d.toDateString();
+          if (!busyCache.has(key)) {
+            const r = rng(hashStr('21cutz|' + key));
+            const [o, c] = HOURS[d.getDay()];
+            const span = (c - o) * 60, list = [];
+            const n = 2 + Math.floor(r() * 4);
+            for (let i = 0; i < n; i++) {
+              const start = o * 60 + Math.floor(r() * (span / 15)) * 15;
+              list.push([start, start + [45, 60, 75, 90][Math.floor(r() * 4)]]);
+            }
+            if (r() < 0.08) list.push([o * 60, c * 60]);
+            busyCache.set(key, list);
+          }
+          return busyCache.get(key);
+        }
+
+        function slotsFor(d) {
+          const [o, c] = HOURS[d.getDay()], blocks = busyBlocks(d), out = [];
+          for (let m = o * 60; m + svc.duration <= c * 60; m += svc.duration) {
+            out.push({ m, taken: blocks.some(([a, b]) => m < b && m + svc.duration > a) });
+          }
+          return out;
+        }
+        const openCount = d => slotsFor(d).filter(s => !s.taken).length;
+
+        function pickDay() {
+          const start = page * 7, end = Math.min(days.length, start + 7);
+          if (dayIdx !== null && dayIdx >= start && dayIdx < end && openCount(days[dayIdx]) > 0) return;
+          dayIdx = null;
+          for (let i = start; i < end; i++) { if (openCount(days[i]) > 0) { dayIdx = i; break; } }
+        }
+
+        function renderDays() {
+          const pageDays = days.slice(page * 7, page * 7 + 7);
+          const a = pageDays[0], b = pageDays[pageDays.length - 1];
+          ui.month.textContent = a.getMonth() === b.getMonth()
+            ? `${MONTHS[a.getMonth()]} ${a.getFullYear()}`
+            : `${MO[a.getMonth()]} — ${MO[b.getMonth()]} ${b.getFullYear()}`;
+          ui.days.innerHTML = pageDays.map((d, i) => {
+            const gi = page * 7 + i, open = openCount(d);
+            return `<button type="button" class="cal-day" data-day="${gi}" aria-pressed="${gi === dayIdx}" ${open ? '' : 'disabled'}
+                      aria-label="${fmtDay(d)}, ${open ? open + ' open slots' : 'fully booked'}">
+                      <span class="t-meta">${WD[d.getDay()]}</span>
+                      <span class="cal-day-num">${d.getDate()}</span>
+                      <span class="t-meta cal-day-open">${open ? open + ' OPEN' : 'FULL'}</span>
+                    </button>`;
+          }).join('');
+          ui.prev.disabled = page === 0;
+          ui.next.disabled = page >= PAGES - 1;
+        }
+
+        function renderSlots() {
+          if (dayIdx === null) {
+            ui.slotsHead.textContent = 'NO OPEN SLOTS THIS WEEK';
+            ui.slots.innerHTML = '';
+            return;
+          }
+          const d = days[dayIdx];
+          ui.slotsHead.textContent = `${fmtDay(d)} — ${svc.duration} MIN SLOTS`;
+          ui.slots.innerHTML = slotsFor(d).map(s =>
+            `<button type="button" class="cal-slot" data-slot="${s.m}" aria-pressed="${s.m === slotMin}" ${s.taken ? 'disabled' : ''}
+               aria-label="${hhmm(s.m)}${s.taken ? ', taken' : ''}">${hhmm(s.m)}</button>`
+          ).join('');
+        }
+
+        function renderSelection() {
+          const valid = dayIdx !== null && slotMin !== null && slotsFor(days[dayIdx]).some(s => s.m === slotMin && !s.taken);
+          if (!valid) slotMin = null;
+          ui.selection.textContent = valid
+            ? `${fmtDay(days[dayIdx])} · ${hhmm(slotMin)} → ${hhmm(slotMin + svc.duration)}`
+            : 'NO SLOT SELECTED';
+          ui.confirm.disabled = !valid;
+        }
+
+        function showDone(on) {
+          ui.main.hidden = on;
+          ui.done.hidden = !on;
+        }
+
+        el.addEventListener('click', e => {
+          const pageBtn = e.target.closest('[data-pv-page]');
+          if (pageBtn && !pageBtn.disabled) {
+            page = Math.max(0, Math.min(PAGES - 1, page + Number(pageBtn.dataset.pvPage)));
+            slotMin = null;
+            pickDay(); renderDays(); renderSlots(); renderSelection();
+            return;
+          }
+          const dayBtn = e.target.closest('[data-day]');
+          if (dayBtn && !dayBtn.disabled) {
+            dayIdx = Number(dayBtn.dataset.day);
+            slotMin = null;
+            $$('[data-day]', ui.days).forEach(b => b.setAttribute('aria-pressed', String(b === dayBtn)));
+            renderSlots(); renderSelection();
+            return;
+          }
+          const slotBtn = e.target.closest('[data-slot]');
+          if (slotBtn && !slotBtn.disabled) {
+            slotMin = Number(slotBtn.dataset.slot);
+            $$('[data-slot]', ui.slots).forEach(b => b.setAttribute('aria-pressed', String(b === slotBtn)));
+            renderSelection();
+            return;
+          }
+          if (e.target.closest('[data-pv-confirm]') && slotMin !== null) {
+            ui.doneService.textContent = `${svc.code} // ${svc.name} — $${svc.price}`;
+            ui.doneWhen.textContent = `${fmtDay(days[dayIdx])} · ${hhmm(slotMin)} → ${hhmm(slotMin + svc.duration)}`;
+            ui.doneRefRow.hidden = !ref;
+            ui.doneRef.textContent = ref || '';
+            showDone(true);
+            ui.doneTitle.focus({ preventScroll: true });
+            if (canAnimate(ui.done)) {
+              ui.done.animate([{ opacity: 0, transform: 'translate3d(0,16px,0)' }, { opacity: 1, transform: 'none' }], { duration: 600, easing: CSS_SPATIAL });
+            }
+            return;
+          }
+          if (e.target.closest('[data-pv-reset]')) {
+            slotMin = null;
+            showDone(false);
+            renderSlots(); renderSelection();
+            ui.confirm.focus({ preventScroll: true });
+          }
+        });
+
+        function update(service, reference) {
+          svc = service;
+          ref = reference || null;
+          ui.service.textContent = `${svc.code} // ${svc.name}`;
+          ui.meta.textContent = `$${svc.price} · ${svc.duration} MIN`;
+          showDone(false);
+          pickDay(); renderDays(); renderSlots(); renderSelection();
+        }
+
+        function setNotice(text) { if (ui.notice) ui.notice.textContent = text; }
+
+        return { update, setNotice };
+      })();
+
+      /* ----------------------------------------------------------
+         9. BOOKING — service selector + Calendly sync
+         ---------------------------------------------------------- */
+      const Booking = (() => {
+        const rows = $$('.svc-row');
+        const services = rows.map(row => ({
+          id: row.dataset.service, code: row.dataset.code, name: row.dataset.name,
+          price: Number(row.dataset.price), duration: Number(row.dataset.duration), slug: row.dataset.slug, row
+        }));
+        const statusBar = $('[data-status]');
+        const sName = $('[data-status-name]'), sMeta = $('[data-status-meta]'), sPath = $('[data-status-path]');
+        const sRef = $('[data-status-ref]'), sRefText = $('[data-status-ref-text]'), sRefClear = $('[data-status-ref-clear]');
+        const embed = $('#calendly-embed');
+        const previewEl = $('[data-cal-preview]');
+        const base = String(CALENDLY_BASE_URL || '').trim().replace(/\/+$/, '');
+        const LIVE = (() => {
+          try { const u = new URL(base); return /(^|\.)calendly\.com$/.test(u.hostname) && base !== CALENDLY_PLACEHOLDER; }
+          catch (e) { return false; }
+        })();
+        let current = services.find(s => s.row.classList.contains('is-active')) || services[0];
+        let reference = null;
+        let liveFailed = false;
+        let mountTimer = null;
+
+        const describe = id => {
+          const s = services.find(x => x.id === id);
+          return s ? `${s.code} // ${s.name} — $${s.price} · ${s.duration} MIN` : '';
+        };
+
+        function calendlyUrl(s) {
+          try {
+            const u = new URL(`${base}/${s.slug}`);
+            u.searchParams.set('hide_gdpr_banner', '1');
+            u.searchParams.set('background_color', '0d0d0d');
+            u.searchParams.set('text_color', 'f5f5f5');
+            u.searchParams.set('primary_color', 'ffffff');
+            if (reference) u.searchParams.set('a1', `Lookbook reference: ${reference}`);
+            return u.toString();
+          } catch (e) { return ''; }
+        }
+
+        function swapText(node, text) {
+          if (!node || node.textContent === text) return;
+          node.textContent = text;
+          if (canAnimate(node)) {
+            node.animate([{ transform: 'translate3d(0,100%,0)', opacity: 0 }, { transform: 'translate3d(0,0,0)', opacity: 1 }], { duration: 420, easing: CSS_SPATIAL });
+          }
+        }
+
+        function whenCalendly(timeout = 8000) {
+          return new Promise((resolve, reject) => {
+            const ready = () => window.Calendly && typeof window.Calendly.initInlineWidget === 'function';
+            if (ready()) { resolve(); return; }
+            const t0 = Date.now();
+            const iv = setInterval(() => {
+              if (ready()) { clearInterval(iv); resolve(); }
+              else if (Date.now() - t0 > timeout) { clearInterval(iv); reject(new Error('Calendly unavailable')); }
+            }, 120);
+          });
+        }
+
+        function usePreview(notice) {
+          if (embed) embed.hidden = true;
+          if (previewEl) previewEl.hidden = false;
+          if (notice && Preview) Preview.setNotice(notice);
+          if (Preview) Preview.update(current, reference);
+        }
+
+        function mountCalendly() {
+          clearTimeout(mountTimer);
+          mountTimer = setTimeout(() => {
+            whenCalendly().then(() => {
+              const url = calendlyUrl(current);
+              if (!url || !embed) throw new Error('Invalid Calendly URL');
+              embed.classList.add('calendly-inline-widget');
+              embed.hidden = false;
+              if (previewEl) previewEl.hidden = true;
+              embed.innerHTML = '';
+              window.Calendly.initInlineWidget({ url, parentElement: embed });
+            }).catch(() => {
+              liveFailed = true;
+              usePreview('CALENDLY UNREACHABLE — SHOWING PREVIEW SCHEDULER');
+            });
+          }, 140);
+        }
+
+        function syncScheduler() {
+          if (LIVE && !liveFailed) {
+            if (previewEl && !previewEl.hidden && Preview) {
+              Preview.setNotice('CONNECTING TO CALENDLY…');
+              Preview.update(current, reference);
+            }
+            mountCalendly();
+          } else {
+            usePreview();
+          }
+        }
+
+        function updateStatus(flash) {
+          swapText(sName, `${current.code} // ${current.name}`);
+          swapText(sMeta, `$${current.price} · ${current.duration} MIN`);
+          if (sPath) sPath.textContent = `${base.replace(/^https?:\/\//, '')}/${current.slug}`;
+          if (sRef) {
+            sRef.hidden = !reference;
+            if (sRefText) sRefText.textContent = reference ? `FROM LOOKBOOK: ${reference}` : '';
+          }
+          if (flash && statusBar) {
+            statusBar.classList.remove('is-flash');
+            void statusBar.offsetWidth;
+            statusBar.classList.add('is-flash');
+          }
+        }
+
+        function select(id, opts = {}) {
+          const next = services.find(s => s.id === id) || services[0];
+          current = next;
+          reference = opts.reference || null;
+          services.forEach(s => {
+            const on = s === next;
+            s.row.classList.toggle('is-active', on);
+            s.row.setAttribute('aria-checked', String(on));
+            s.row.tabIndex = on ? 0 : -1;
+          });
+          updateStatus(!!opts.flash);
+          syncScheduler();
+        }
+
+        rows.forEach((row, i) => {
+          row.addEventListener('click', () => select(row.dataset.service));
+          row.addEventListener('keydown', e => {
+            const dir = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 }[e.key];
+            if (!dir) return;
+            e.preventDefault();
+            const target = rows[(i + dir + rows.length) % rows.length];
+            select(target.dataset.service);
+            target.focus();
+          });
+        });
+        if (sRefClear) sRefClear.addEventListener('click', () => select(current.id));
+
+        if (services.length) select(current.id);
+
+        return { select, describe };
+      })();
+
+      /* ----------------------------------------------------------
+         10. LOOKBOOK — filters (GSAP Flip) + lightbox
+         ---------------------------------------------------------- */
+      const LOOKBOOK = {
+        '01': {
+          cat: 'SKIN FADE', service: 'signature', title: 'HIGH SKIN FADE + TEXTURED CROP',
+          note: 'Fade set high above the parietal ridge and taken from bare foil to a #1.5 in three passes. The top is point-cut for broken, matte texture that sits forward without a hard line.',
+          specs: [['Clipper', '0.0mm Foil → #1.5 Guard'], ['Fade line', 'High, above the parietal ridge'], ['Top', 'Point-cut, 3–4 cm, forward texture'], ['Neck', 'Straight-razor taper'], ['Finish', 'Matte Clay'], ['Time', '45 Min'], ['Rebook', 'Every 2–3 weeks']]
+        },
+        '02': {
+          cat: 'SCISSOR WORK', service: 'scissor', title: 'ALL-SCISSOR FLOW + NATURAL TEXTURE',
+          note: 'Cut entirely with scissors; no clippers touch it. Weight is removed with slide-cutting so the length moves when it is dry, then shaped with a blow-dry instead of heavy product.',
+          specs: [['Tools', 'Scissors only'], ['Length', '6–9 cm top, 3 cm sides'], ['Technique', 'Slide-cut weight removal'], ['Wash', 'Included'], ['Finish', 'Sea Salt Spray + Blow-dry'], ['Time', '45 Min'], ['Rebook', 'Every 4–5 weeks']]
+        },
+        '03': {
+          cat: 'BEARD SCULPT', service: 'beard', title: 'SCULPTED BEARD + RAZOR CHEEK LINE',
+          note: 'Graduated from #2 at the sideburn to #4 at the chin to build a stronger jaw. Cheek and neck lines are cut with a straight razor over hot lather, so the edge holds for two weeks.',
+          specs: [['Trimmer', '#2 → #4 Guard graduation'], ['Cheek line', 'Straight razor, hot lather'], ['Neckline', 'Two fingers above the Adam’s apple'], ['Finish', 'Beard Balm, matte'], ['Time', '30 Min'], ['Rebook', 'Every 2 weeks']]
+        },
+        '04': {
+          cat: 'SKIN FADE', service: 'signature', title: 'LOW DROP FADE + HARD PART',
+          note: 'A low fade that drops behind the ear to follow the head shape, with a razor-cut hard part. The top is cut scissor-over-comb so it can be combed into place or worn loose.',
+          specs: [['Clipper', '0.5mm → #2 Guard'], ['Fade line', 'Low drop, follows behind the ear'], ['Part', 'Razor-cut hard part'], ['Top', 'Scissor over comb, 5 cm'], ['Finish', 'Water-based Pomade, low shine'], ['Time', '45 Min'], ['Rebook', 'Every 3 weeks']]
+        },
+        '05': {
+          cat: 'SCISSOR WORK', service: 'scissor', title: 'SQUARED CREW, SCISSOR OVER COMB',
+          note: 'A classic crew built square at the front and graduated toward the crown. Sides are tapered scissor-over-comb down to the nape: soft, even, no visible lines.',
+          specs: [['Tools', 'Scissor over comb, no clippers'], ['Top', 'Squared, 2.5 cm graduating back'], ['Sides', 'Tapered to 1 cm at the nape'], ['Wash', 'Included'], ['Finish', 'Matte Paste, natural hold'], ['Time', '45 Min'], ['Rebook', 'Every 3–4 weeks']]
+        },
+        '06': {
+          cat: 'BEARD SCULPT', service: 'ritual', title: 'FULL RITUAL: TAPER + BEARD GEOMETRY',
+          note: 'The full ritual: a skin taper and a squared beard set as one shape, finished with hot towels, a straight-razor line-up and a cold stone to close it out.',
+          specs: [['Clipper', '0.0mm Foil → #2 Guard taper'], ['Beard', '#3 Guard, squared jaw geometry'], ['Razor', 'Hot towel, straight-razor line-up'], ['Finish', 'Cold stone + Matte Clay'], ['Time', '60 Min'], ['Rebook', 'Every 3 weeks']]
+        }
+      };
+
+      const grid = $('[data-grid]');
+      const items = grid ? $$('.g-item', grid) : [];
+      const visibleItems = () => items.filter(it => !it.classList.contains('is-hidden'));
+
+      const Lookbook = (() => {
+        if (!grid) return null;
+        const bar = $('[data-filter-bar]');
+        const btns = bar ? $$('[data-filter]', bar) : [];
+        const indicator = bar ? $('[data-filter-indicator]', bar) : null;
+        const statusEl = $('[data-filter-status]');
+        let active = 'all';
+        let revealed = !MOTION;
+        let batch = [];
+
+        if (MOTION) {
+          G.set(items, { clipPath: 'inset(12% 0% 0% 0%)', opacity: 0 });
+          G.set($$('.g-media', grid), { scale: 1.12 });
+          batch = ST.batch(items, {
+            start: 'top 90%', once: true,
+            onEnter: els => {
+              G.to(els, {
+                clipPath: 'inset(0% 0% 0% 0%)', opacity: 1, duration: 1.15, ease: EASE_SPATIAL, stagger: 0.12, overwrite: true,
+                onComplete: () => G.set(els, { clearProps: 'clipPath,opacity' })
+              });
+              G.to(els.map(e => $('.g-media', e)), { scale: 1, duration: 1.5, ease: EASE_SPATIAL, stagger: 0.12 });
+            }
+          });
+        }
+
+        function ensureRevealed() {
+          if (revealed) return;
+          revealed = true;
+          batch.forEach(t => t.kill());
+          G.killTweensOf(items);
+          G.set(items, { clearProps: 'clipPath,opacity' });
+          G.set($$('.g-media', grid), { scale: 1 });
+        }
+
+        function moveIndicator(btn, instant) {
+          if (!indicator || !btn) return;
+          if (instant) indicator.classList.add('no-trans');
+          indicator.style.transform = `translate3d(${btn.offsetLeft}px,0,0) scaleX(${btn.offsetWidth / 100})`;
+          if (instant) { void indicator.offsetWidth; indicator.classList.remove('no-trans'); }
+        }
+        if (bar && indicator) {
+          bar.classList.add('has-indicator');
+          moveIndicator(btns.find(b => b.getAttribute('aria-pressed') === 'true'), true);
+          const realign = () => moveIndicator(btns.find(b => b.dataset.filter === active), true);
+          window.addEventListener('resize', debounce(realign, 100));
+          if (document.fonts && document.fonts.ready) document.fonts.ready.then(realign);
+        }
+
+        function apply(cat) {
+          if (cat === active) return;
+          active = cat;
+          btns.forEach(b => {
+            const on = b.dataset.filter === cat;
+            b.setAttribute('aria-pressed', String(on));
+            if (on) {
+              moveIndicator(b);
+              if (bar && b.scrollIntoView && bar.scrollWidth > bar.clientWidth) b.scrollIntoView({ block: 'nearest', inline: 'center', behavior: REDUCED ? 'auto' : 'smooth' });
+            }
+          });
+          const match = it => cat === 'all' || it.dataset.cat === cat;
+          const count = items.filter(match).length;
+          if (statusEl) statusEl.textContent = `Showing ${pad(count)} of ${pad(items.length)}`;
+
+          if (MOTION && FLIP) {
+            ensureRevealed();
+            const state = FLIP.getState(items);
+            items.forEach(it => it.classList.toggle('is-hidden', !match(it)));
+            FLIP.from(state, {
+              duration: 0.85, ease: EASE_SPATIAL, absoluteOnLeave: true,
+              onEnter: els => G.fromTo(els,
+                { opacity: 0, clipPath: 'inset(12% 0% 0% 0%)' },
+                { opacity: 1, clipPath: 'inset(0% 0% 0% 0%)', duration: 0.75, ease: EASE_SPATIAL, delay: 0.12, stagger: 0.06, clearProps: 'clipPath' }),
+              onLeave: els => G.to(els, { opacity: 0, duration: 0.28, ease: EASE_UI }),
+              onComplete: () => ST.refresh()
+            });
+          } else {
+            if (MOTION) ensureRevealed();
+            let n = 0;
+            items.forEach(it => {
+              const show = match(it);
+              it.classList.toggle('is-hidden', !show);
+              if (show && canAnimate(it)) {
+                it.animate(
+                  [{ opacity: 0, clipPath: 'inset(12% 0% 0% 0%)' }, { opacity: 1, clipPath: 'inset(0% 0% 0% 0%)' }],
+                  { duration: 680, easing: CSS_SPATIAL, delay: n++ * 70, fill: 'backwards' }
+                );
+              }
+            });
+            if (ST) ST.refresh();
+          }
+        }
+
+        btns.forEach(b => b.addEventListener('click', () => apply(b.dataset.filter)));
+        return { apply };
+      })();
+
+      const Lightbox = (() => {
+        const lb = $('#lightbox');
+        if (!lb || !items.length) return null;
+        const q = s => $(s, lb);
+        const ui = {
+          img: q('[data-lb-img]'), media: q('[data-lb-media]'), frame: q('[data-lb-frame]'), panel: q('[data-lb-panel]'),
+          chip: q('[data-lb-chip]'), counter: q('[data-lb-counter]'), cat: q('[data-lb-cat]'), id: q('[data-lb-id]'),
+          title: q('[data-lb-title]'), note: q('[data-lb-note]'), specs: q('[data-lb-specs]'), service: q('[data-lb-service]'),
+          book: q('[data-lb-book]'), prev: q('[data-lb-prev]'), next: q('[data-lb-next]'), close: q('[data-lb-close]')
+        };
+        let current = null, lastFocus = null, isOpen = false, token = 0;
+        lb.inert = true;
+
+        function populate(it) {
+          const id = it.dataset.id, d = LOOKBOOK[id];
+          const srcImg = $('img', it);
+          const list = visibleItems();
+          if (srcImg && srcImg.getAttribute('src')) ui.img.src = srcImg.currentSrc || srcImg.src;
+          else ui.img.removeAttribute('src');
+          ui.img.alt = srcImg ? srcImg.alt : '';
+          ui.img.style.objectPosition = '50% 50%';
+          ui.frame.classList.toggle('is-light', it.classList.contains('g-light'));
+          ui.chip.textContent = `#${id}`;
+          ui.counter.textContent = `${pad(list.indexOf(it) + 1)} / ${pad(list.length)}`;
+          ui.cat.textContent = d.cat;
+          ui.id.textContent = `ARCHIVE #${id}`;
+          ui.title.textContent = d.title;
+          ui.note.textContent = d.note;
+          ui.specs.innerHTML = d.specs.map(([k, v]) => `<div class="lb-spec"><dt class="c-muted">${k}</dt><dd>${v}</dd></div>`).join('');
+          ui.service.textContent = `BOOKS AS ${Booking.describe(d.service)}`;
+          const single = list.length < 2;
+          ui.prev.disabled = single;
+          ui.next.disabled = single;
+        }
+
+        function show(it, dir) {
+          current = it;
+          if (!dir || REDUCED) { populate(it); return; }
+          const my = ++token;
+          const nodes = [ui.media, ui.panel].filter(canAnimate);
+          const outs = nodes.map(n => n.animate(
+            [{ opacity: 1, transform: 'translate3d(0,0,0)' }, { opacity: 0, transform: `translate3d(${-dir * 24}px,0,0)` }],
+            { duration: 170, easing: CSS_UI, fill: 'forwards' }
+          ));
+          Promise.all(outs.map(a => a.finished.catch(() => {}))).then(() => {
+            if (my !== token) return;
+            populate(it);
+            outs.forEach(a => a.cancel());
+            nodes.forEach(n => n.animate(
+              [{ opacity: 0, transform: `translate3d(${dir * 24}px,0,0)` }, { opacity: 1, transform: 'translate3d(0,0,0)' }],
+              { duration: 540, easing: CSS_SPATIAL }
+            ));
+          });
+        }
+
+        function setBackgroundInert(on) {
+          [$('#main'), navEl, $('.site-footer'), drawer].forEach(n => { if (n) n.inert = on; });
+          if (!on && drawer) drawer.inert = !drawerOpen;
+        }
+
+        function open(it) {
+          if (!it) return;
+          lastFocus = document.activeElement;
+          show(it, 0);
+          isOpen = true;
+          lb.inert = false;
+          lb.classList.add('is-open');
+          lb.setAttribute('aria-hidden', 'false');
+          setBackgroundInert(true);
+          lockScroll(true, 'lightbox');
+          requestAnimationFrame(() => ui.close.focus({ preventScroll: true }));
+        }
+
+        function close(opts = {}) {
+          if (!isOpen) return;
+          isOpen = false;
+          lb.classList.remove('is-open');
+          lb.setAttribute('aria-hidden', 'true');
+          lb.inert = true;
+          setBackgroundInert(false);
+          lockScroll(false, 'lightbox');
+          if (opts.restoreFocus !== false && lastFocus && lastFocus.focus) lastFocus.focus({ preventScroll: true });
+        }
+
+        function step(dir) {
+          const list = visibleItems();
+          if (list.length < 2 || !current) return;
+          const i = list.indexOf(current);
+          show(list[(i + dir + list.length) % list.length], dir);
+        }
+
+        grid.addEventListener('click', e => {
+          const it = e.target.closest('.g-item');
+          if (it) open(it);
+        });
+        grid.addEventListener('keydown', e => {
+          if ((e.key === 'Enter' || e.key === ' ') && e.target.classList && e.target.classList.contains('g-item')) {
+            e.preventDefault();
+            open(e.target);
+          }
+        });
+        lb.addEventListener('click', e => {
+          if (e.target.closest('[data-lb-close]')) { close(); return; }
+          if (e.target.matches('[data-lb-dismiss]')) close();
+        });
+        ui.prev.addEventListener('click', () => step(-1));
+        ui.next.addEventListener('click', () => step(1));
+        ui.book.addEventListener('click', () => {
+          if (!current) return;
+          const id = current.dataset.id, d = LOOKBOOK[id];
+          close({ restoreFocus: false });
+          Booking.select(d.service, { reference: `ARCHIVE #${id} — ${d.title}`, flash: true });
+          setTimeout(() => {
+            scrollToTarget('#book');
+            const heading = $('#book-heading');
+            setTimeout(() => heading && heading.focus({ preventScroll: true }), REDUCED ? 0 : 1100);
+          }, 60);
+        });
+
+        function trapFocus(e) {
+          const f = $$('button:not([disabled]), [href], [tabindex]:not([tabindex="-1"])', lb).filter(n => n.offsetParent !== null);
+          if (!f.length) return;
+          const first = f[0], last = f[f.length - 1];
+          if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+          else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+        }
+
+        return { open, close, step, trapFocus, isOpen: () => isOpen };
+      })();
+
+      document.addEventListener('keydown', e => {
+        if (Lightbox && Lightbox.isOpen()) {
+          if (e.key === 'Escape') { e.preventDefault(); Lightbox.close(); }
+          else if (e.key === 'ArrowRight') { e.preventDefault(); Lightbox.step(1); }
+          else if (e.key === 'ArrowLeft') { e.preventDefault(); Lightbox.step(-1); }
+          else if (e.key === 'Tab') Lightbox.trapFocus(e);
+          return;
+        }
+        if (drawerOpen && e.key === 'Escape') { setDrawer(false); burger && burger.focus(); }
+      });
+
+      /* ----------------------------------------------------------
+         11. FOOTER — fit display word edge to edge, year
+         ---------------------------------------------------------- */
+      /* Shrink display headings if a masked line is wider than its column
+         (Syne's wide caps vary with weight and fallback fonts). */
+      function fitLines() {
+        $$('[data-fit-lines]').forEach(el => {
+          el.style.fontSize = '';
+          const avail = el.clientWidth;
+          const widest = Math.max(0, ...$$('.line-inner', el).map(n => n.getBoundingClientRect().width));
+          if (avail > 0 && widest > avail) {
+            const cur = parseFloat(getComputedStyle(el).fontSize);
+            el.style.fontSize = `${Math.floor(cur * (avail / widest) * 0.985)}px`;
+          }
+        });
+      }
+
+      const fitWrap = $('[data-fit-wrap]'), fitWord = $('[data-fit]');
+      function fitFooter() {
+        if (!fitWrap || !fitWord) return;
+        fitWord.style.fontSize = '100px';
+        const w = fitWord.getBoundingClientRect().width;
+        const target = fitWrap.clientWidth;
+        if (w > 0 && target > 0) fitWord.style.fontSize = `${(100 * target / w) * 0.995}px`;
+      }
+      fitLines();
+      fitFooter();
+      window.addEventListener('resize', debounce(() => { fitLines(); fitFooter(); if (ST) ST.refresh(); }, 150));
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(() => { fitLines(); fitFooter(); if (ST) ST.refresh(); });
+      }
+      const yearEl = $('[data-year]');
+      if (yearEl) yearEl.textContent = String(new Date().getFullYear());
+    })();
+  </script>
+</body>
+</html>
